@@ -52,7 +52,7 @@ public class Input extends Signal {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Signal connect(Signal signal) {
+	public void connect(Signal signal) {
 		if (!(signal instanceof Output)) {
 			throw new IllegalArgumentException("An input can only be connected to an output.");
 		}
@@ -64,20 +64,23 @@ public class Input extends Signal {
 			this.connection = (Output) signal;
 			signal.connect(this);
 		}
-		return this;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Signal disconnect(Signal signal) {
-		if (!this.isConnected() || !this.connection.equals(signal)) {
-			throw new IllegalArgumentException();
+	public void disconnect(Signal signal) {
+		if (!(signal instanceof Output)) {
+			throw new IllegalArgumentException("An input can only be connected to an output.");
 		}
-		this.connection = null;
-		signal.disconnect(this);
-		return this;
+		if (!this.connection.equals(signal)) {
+			throw new IllegalArgumentException("This input is not connected to " + signal);
+		}
+		if (this.isConnected()) {
+			this.connection = null;
+			signal.disconnect(this);
+		}
 	}
 
 	/**

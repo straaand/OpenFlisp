@@ -94,20 +94,19 @@ public abstract class Signal {
 	 * Connect two signals with each other.
 	 * 
 	 * @param signal	a signal which the connection should be made with
-	 * @return the signal which the connect call was made on
 	 * @throws IllegalArgumentException if the signal connection already existed
 	 * @throws IllegalArgumentException if the two signal types can not connect
 	 */
-	public abstract Signal connect(Signal signal);
+	public abstract void connect(Signal signal);
 	
 	/**
 	 * Disconnect two signals from each other.
 	 * 
 	 * @param signal	a signal which if found should be disconnected
-	 * @return the signal which the disconnect call was made on
 	 * @throws IllegalArgumentException if the signal connection don't exists
+	 * @throws IllegalArgumentException if the two signal types can not disconnect
 	 */
-	public abstract Signal disconnect(Signal signal);
+	public abstract void disconnect(Signal signal);
 	
 	/**
 	 * Checks if this signal is connected or not.

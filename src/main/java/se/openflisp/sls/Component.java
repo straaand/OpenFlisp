@@ -119,8 +119,8 @@ public abstract class Component {
 	 * @param identifier	a pin identifier which corresponding output should be set
 	 * @param state 		which state the output should be set to
 	 */
-	protected void setOutputState(String identifier, Object state) {
-		
+	protected void setOutputState(String identifier, Signal.State state) {
+		this.outputs.get(identifier).setState(state);
 	}
 	
 	/**
