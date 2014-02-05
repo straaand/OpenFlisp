@@ -21,7 +21,7 @@ package se.openflisp.sls;
  * A gate can have many inputs and only one output.
  * Extends the class Component.
  * 
- * @author Pär Svedberg <rockkuf@gmail.com>
+ * @author PÃ¤r Svedberg <rockkuf@gmail.com>
  * @version 1.0
  */
 public abstract class Gate extends Component {
