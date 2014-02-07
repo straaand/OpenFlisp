@@ -159,4 +159,17 @@ public class OutputTest extends SignalTest {
 		instance.disconnect(input1);
 		assertFalse(instance.isConnected());
 	}
+	
+	@Test
+	public void testConnectTriggersEvent() {
+		instance.connect(input1);
+		verify(delegator).onSignalConnection(input1, instance);
+	}
+	
+	@Test
+	public void testDisconnectTriggersEvent() {
+		instance.connect(input1);
+		instance.disconnect(input1);
+		verify(delegator).onSignalDisconnection(input1, instance);
+	}
 }

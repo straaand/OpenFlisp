@@ -1,18 +1,24 @@
 package se.openflisp.sls;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import se.openflisp.sls.event.ComponentEventDelegator;
+
 public abstract class SignalTest {
 
 	public Component owner;
+	public ComponentEventDelegator delegator;
 	
 	@Before
 	public void setup() {
+		delegator = Mockito.mock(ComponentEventDelegator.class);
 		owner = Mockito.mock(Component.class);
+		doReturn(delegator).when(owner).getEventDelegator();
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -76,6 +82,13 @@ public abstract class SignalTest {
 		signal.setState(Signal.State.LOW);
 		signal.setState(Signal.State.HIGH);
 		assertEquals(Signal.State.HIGH, signal.getState());
+	}
+	
+	@Test
+	public void testStateChangeTriggerEvent() {
+		Signal signal = this.getInstance("identifier", owner);
+		signal.setState(Signal.State.HIGH);
+		verify(delegator).onSignalChange(owner, signal);
 	}
 	
 	protected abstract Signal getInstance(String identifier, Component owner);
