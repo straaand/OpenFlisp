@@ -87,6 +87,7 @@ public abstract class Signal {
 	protected void setState(Signal.State state) {
 		if (!this.state.equals(state)) {
 			this.state = state;
+			this.owner.getEventDelegator().onSignalChange(this.owner, this);
 		}
 	}
 	

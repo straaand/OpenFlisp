@@ -62,6 +62,7 @@ public class Output extends Signal {
 		}
 		if (this.connections.add((Input) signal)) {
 			signal.connect(this);
+			this.getOwner().getEventDelegator().onSignalConnection((Input) signal, this);
 		}
 	}
 
@@ -75,6 +76,7 @@ public class Output extends Signal {
 		}
 		if (this.connections.remove(signal)) {
 			signal.disconnect(this);
+			this.getOwner().getEventDelegator().onSignalDisconnection((Input) signal, this);
 		}
 	}
 

@@ -16,7 +16,9 @@
  */
 package se.openflisp.sls;
 
+import se.openflisp.sls.event.ComponentEventDelegator;
 import se.openflisp.sls.exception.ComponentEvaluationException;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,6 +36,11 @@ public abstract class Component {
 	 * Component identifier used in collections of components and in debugging.
 	 */
 	private final String identifier;
+
+	/**
+	 * Delegates events that happen in the Component.
+	 */
+	private final ComponentEventDelegator eventDelegator;
 	
 	/**
 	 * Map of the components inputs mapped to its pin identifiers.
@@ -46,12 +53,23 @@ public abstract class Component {
 	private Map<String, Output> outputs = new HashMap<String, Output>();
 	
 	/**
-	 * Constructs a new Component with a identifier
+	 * Constructs a new Component with a identifier.
 	 * 
 	 * @param identifier	the component identifier
 	 */
 	public Component(String identifier) {
-		this.identifier = identifier;
+		this(identifier, new ComponentEventDelegator());
+	}
+	
+	/**
+	 * Constructs a new Component with a identifier and delegator.
+	 * 
+	 * @param identifier	the component identifier
+	 * @param delegator		the component event delegator
+	 */
+	public Component(String identifier, ComponentEventDelegator delegator) {
+		this.identifier 	= identifier;
+		this.eventDelegator = delegator;
 	}
 	
 	/**
@@ -61,6 +79,15 @@ public abstract class Component {
 	 */
 	public String getIdentifier() {
 		return this.identifier;
+	}
+	
+	/**
+	 * Gets the event delegator for the Component.
+	 * 
+	 * @return event delegator for the Component
+	 */
+	public ComponentEventDelegator getEventDelegator() {
+		return this.eventDelegator;
 	}
 	
 	/**
