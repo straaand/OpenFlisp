@@ -52,7 +52,7 @@ public class Input extends Signal {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void connect(Signal signal) {
+	public boolean connect(Signal signal) {
 		if (!(signal instanceof Output)) {
 			throw new IllegalArgumentException("An input can only be connected to an output.");
 		}
@@ -60,29 +60,32 @@ public class Input extends Signal {
 			if (!this.connection.equals(signal)) {
 				throw new IllegalArgumentException("This input is already connected to " + this.connection);
 			}
-		} else {
-			this.connection = (Output) signal;
-			signal.connect(this);
-			this.getOwner().getEventDelegator().onSignalConnection(this, this.connection);
+			return false;
 		}
+		this.connection = (Output) signal;
+		signal.connect(this);
+		this.getOwner().getEventDelegator().onSignalConnection(this, this.connection);
+		return true;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void disconnect(Signal signal) {
+	public boolean disconnect(Signal signal) {
 		if (!(signal instanceof Output)) {
 			throw new IllegalArgumentException("An input can only be connected to an output.");
 		}
-		if (!this.connection.equals(signal)) {
-			throw new IllegalArgumentException("This input is not connected to " + signal);
-		}
 		if (this.isConnected()) {
+			if (!this.connection.equals(signal)) {
+				throw new IllegalArgumentException("This input is not connected to " + signal);
+			}
 			this.connection = null;
 			signal.disconnect(this);
-			this.getOwner().getEventDelegator().onSignalConnection(this, (Output) signal);
+			this.getOwner().getEventDelegator().onSignalDisconnection(this, (Output) signal);
+			return true;
 		}
+		return false;
 	}
 
 	/**

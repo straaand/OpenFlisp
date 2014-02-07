@@ -56,28 +56,32 @@ public class Output extends Signal {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void connect(Signal signal) {
+	public boolean connect(Signal signal) {
 		if (!(signal instanceof Input)) {
 			throw new IllegalArgumentException("An output can only be connected to an input.");
 		}
 		if (this.connections.add((Input) signal)) {
 			signal.connect(this);
 			this.getOwner().getEventDelegator().onSignalConnection((Input) signal, this);
+			return true;
 		}
+		return false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void disconnect(Signal signal) {
+	public boolean disconnect(Signal signal) {
 		if (!(signal instanceof Input)) {
 			throw new IllegalArgumentException("An output can only be connected to an input.");
 		}
 		if (this.connections.remove(signal)) {
 			signal.disconnect(this);
 			this.getOwner().getEventDelegator().onSignalDisconnection((Input) signal, this);
+			return true;
 		}
+		return false;
 	}
 
 	/**

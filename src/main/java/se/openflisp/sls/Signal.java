@@ -46,8 +46,16 @@ public abstract class Signal {
 	 * 
 	 * @param identifier	pin identifier used in the owner
 	 * @param owner			the owning Component of this signal
+	 * @throws IllegalArgumentException if any parameter is null or empty
 	 */
 	public Signal(String identifier, Component owner) {
+		if (identifier == null || identifier.isEmpty()) {
+			throw new IllegalArgumentException("Identifier can not be null or empty.");
+		}
+		if (owner == null) {
+			throw new IllegalArgumentException("Owner can not be null.");
+		}
+		
 		this.owner      = owner;
 		this.identifier = identifier;
 	}
@@ -95,19 +103,21 @@ public abstract class Signal {
 	 * Connect two signals with each other.
 	 * 
 	 * @param signal	a signal which the connection should be made with
+	 * @returns true if a new connection was made, false otherwise
 	 * @throws IllegalArgumentException if the signal connection already existed
 	 * @throws IllegalArgumentException if the two signal types can not connect
 	 */
-	public abstract void connect(Signal signal);
+	public abstract boolean connect(Signal signal);
 	
 	/**
 	 * Disconnect two signals from each other.
 	 * 
 	 * @param signal	a signal which if found should be disconnected
+	 * @returns true if a new connection was made, false otherwise
 	 * @throws IllegalArgumentException if the signal connection don't exists
 	 * @throws IllegalArgumentException if the two signal types can not disconnect
 	 */
-	public abstract void disconnect(Signal signal);
+	public abstract boolean disconnect(Signal signal);
 	
 	/**
 	 * Checks if this signal is connected or not.

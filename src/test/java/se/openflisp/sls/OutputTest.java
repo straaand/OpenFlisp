@@ -71,6 +71,11 @@ public class OutputTest extends SignalTest {
 	}
 	
 	@Test
+	public void testConnectReturnsTrue() {
+		assertTrue(instance.connect(input1));
+	}
+	
+	@Test
 	public void testConnectCallsInput() {
 		instance.connect(input1);
 		verify(input1).connect(instance);
@@ -123,6 +128,12 @@ public class OutputTest extends SignalTest {
 	}
 	
 	@Test
+	public void testDisconnectReturnsTrue() {
+		instance.connect(input1);
+		assertTrue(instance.disconnect(input1));
+	}
+	
+	@Test
 	public void testDisconnectCallsInput() {
 		instance.connect(input1);
 		instance.disconnect(input1);
@@ -136,10 +147,9 @@ public class OutputTest extends SignalTest {
 		verify(input1).disconnect(instance);
 	}
 	
-	@Test(expected=IllegalArgumentException.class)
 	public void testDisconnectToNotConnectedOutput() {
 		instance.connect(input1);
-		instance.disconnect(input2);
+		assertFalse(instance.disconnect(input2));
 	}
 
 	@Test

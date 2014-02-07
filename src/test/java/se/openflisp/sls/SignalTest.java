@@ -38,7 +38,7 @@ public abstract class SignalTest {
 	
 	@Test
 	public void testGettingValidIdentifier() {
-		Signal signal = getInstance("identifier", null);
+		Signal signal = getInstance("identifier", owner);
 		assertEquals("identifier", signal.getIdentifier());
 	}
 	
