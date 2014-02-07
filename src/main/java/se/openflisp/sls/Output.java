@@ -16,6 +16,7 @@
  */
 package se.openflisp.sls;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,6 +43,15 @@ public class Output extends Signal {
 		super(identifier, owner);
 	}
 
+	/**
+	 * Gets all Inputs that are connected to the Output
+	 * 
+	 * @return unmodifiable set of all connections to this Output
+	 */
+	public Set<Input> getConnections() {
+		return Collections.unmodifiableSet(this.connections);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
