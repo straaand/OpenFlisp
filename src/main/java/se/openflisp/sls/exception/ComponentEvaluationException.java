@@ -28,11 +28,12 @@ import java.lang.Exception;
  * @version 1.0
  */
 
+@SuppressWarnings("serial")
 public class ComponentEvaluationException extends Exception {
 
 	/**
 	 * {@inheritDoc}
-	 **/
+	 */
 	public ComponentEvaluationException(String msg) {
 		super(msg);
 	}

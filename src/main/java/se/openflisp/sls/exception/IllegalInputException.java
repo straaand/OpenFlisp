@@ -16,8 +16,6 @@
  */
 package se.openflisp.sls.exception;
 
-import java.lang.Exception;
-
 /**
  * Thrown to indicate illegal connections between components.
  * 
@@ -27,11 +25,12 @@ import java.lang.Exception;
  * @version 1.0
  */
 
+@SuppressWarnings("serial")
 public class IllegalInputException extends ComponentEvaluationException {
 
 	/**
 	 * {@inheritDoc}
-	 **/
+	 */
 	public IllegalInputException(String msg) {
 		super(msg);
 	}
