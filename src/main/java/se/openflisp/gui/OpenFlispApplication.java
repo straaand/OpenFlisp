@@ -23,7 +23,6 @@ import se.openflisp.gui.swing.OpenFlispFrame;
  * 
  * @author Daniel Svensson <daniel@dsit.se>
  * @version 1.0
- * 
  */
 public class OpenFlispApplication {
 	/* Application frame and settings */

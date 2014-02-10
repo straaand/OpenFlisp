@@ -33,10 +33,9 @@ import se.openflisp.gui.swing.OpenFlispPerspectives;
  * 
  * @author Daniel Svensson <daniel@dsit.se>
  * @version 1.0
- * 
  */
-
 public class OpenFlispFrame extends JFrame {
+	
 	private OpenFlispPerspectives perspectives;
 	
 	public OpenFlispFrame() {
