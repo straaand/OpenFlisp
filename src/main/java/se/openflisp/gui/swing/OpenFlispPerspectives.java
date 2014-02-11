@@ -27,7 +27,9 @@ import javax.swing.JPanel;
 import bibliothek.gui.DockController;
 import bibliothek.gui.dock.DefaultDockable;
 import bibliothek.gui.dock.SplitDockStation;
+import bibliothek.gui.dock.layout.DockableProperty;
 import bibliothek.gui.dock.station.split.SplitDockGrid;
+import bibliothek.gui.dock.util.DockUtilities;
 
 /**	
  * Create OpenFlisp Perspectives
