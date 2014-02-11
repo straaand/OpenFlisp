@@ -38,7 +38,6 @@ import bibliothek.gui.dock.util.DockUtilities;
  * @version 1.0
  * 
  */
-
 public class OpenFlispPerspectives implements ItemListener {
 	// Define perspectives 
 	JPanel perspective;

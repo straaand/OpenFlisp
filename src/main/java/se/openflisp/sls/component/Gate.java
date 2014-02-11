@@ -14,7 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.openflisp.sls;
+package se.openflisp.sls.component;
+
+import se.openflisp.sls.Component;
+import se.openflisp.sls.Output;
+import se.openflisp.sls.Signal;
 import se.openflisp.sls.exception.ComponentEvaluationException;
 
 /**
@@ -23,6 +27,7 @@ import se.openflisp.sls.exception.ComponentEvaluationException;
  * Extends the class Component.
  * 
  * @author Pär Svedberg <rockkuf@gmail.com>
+ * @author Anton Ekberg <anton.ekberg@gmail.com>
  * @version 1.0
  */
 public abstract class Gate extends Component {
@@ -49,17 +54,20 @@ public abstract class Gate extends Component {
 	}
 	
 	/**
-	 * Sets the output state of the gate.
+	 * Evaluate the gate's different inputs and provide a output signal.
 	 * 
-	 * @param state the state which the output should be set to
+	 * If it is unable to decide a signal for the given inputs the method
+	 * must provide {@link Signal.State#FLOATING}.
+	 * 
+	 * @return the evaluated signal for the given inputs
 	 */
-	protected void setState(Signal.State state) {
-		this.setOutputState(Gate.OUTPUT, state);
-	}
+	protected abstract Signal.State evaluateOutput();
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public abstract void evaluate() throws ComponentEvaluationException;
+	public void evaluate() throws ComponentEvaluationException {
+		this.setOutputState(Gate.OUTPUT, this.evaluateOutput());
+	}
 }
