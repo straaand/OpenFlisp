@@ -36,7 +36,6 @@ import bibliothek.gui.dock.station.split.SplitDockGrid;
  * @version 1.0
  * 
  */
-
 public class OpenFlispPerspectives implements ItemListener {
 	// Define perspectives 
 	JPanel perspective;
@@ -55,7 +54,7 @@ public class OpenFlispPerspectives implements ItemListener {
         String comboBoxItems[] = { SLSPERSPECTIVE, ASMPERSPECTIVE };
         
         //Create combobox for perspectives
-        JComboBox cb = new JComboBox(comboBoxItems);
+        JComboBox<String> cb = new JComboBox<String>(comboBoxItems);
         cb.setEditable(false);
         cb.addItemListener(this);
         comboBoxPane.add(cb);
