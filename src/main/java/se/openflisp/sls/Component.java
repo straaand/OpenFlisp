@@ -148,7 +148,7 @@ public abstract class Component {
 	 * @param state 		which state the output should be set to
 	 */
 	protected void setOutputState(String identifier, Signal.State state) {
-		this.outputs.get(identifier).setState(state);
+		this.getOutput(identifier).setState(state);
 	}
 	
 	/**
