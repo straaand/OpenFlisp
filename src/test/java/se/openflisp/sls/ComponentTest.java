@@ -35,8 +35,8 @@ public abstract class ComponentTest {
 
 	@Before
 	public void setup() {
-		component = getInstance(id);
 		id = "identifier";
+		component = getInstance(id);
 		delegatorMock = Mockito.mock(ComponentEventDelegator.class);
 
 		//Mockings for classes extending ComponentTest
