@@ -74,7 +74,6 @@ public abstract class Component {
 		if (delegator == null) {
 			throw new IllegalArgumentException("Delegator can not be null.");
 		}
-
 		this.identifier 	= identifier;
 		this.eventDelegator = delegator;
 	}
