@@ -21,7 +21,7 @@ import se.openflisp.sls.event.ComponentEventDelegator;
 import java.util.Collection;
 
 /**
- * Base class for all outgoing and incoming signals to a Component.
+ * A NotGate Component.
  * 
  * @author Hannes Elvemyr <hannes88@gmail.com>
  * @version 1.0
