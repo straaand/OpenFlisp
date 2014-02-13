@@ -44,6 +44,11 @@ public abstract class ComponentTest {
 		outputMock1 = Mockito.mock(Output.class);
 	}
 
+	@Test(expected=IllegalArgumentException.class)
+	public void testConstructingWithNullIdentifier() {
+		getInstance(null);
+	}
+
 	@Test
 	public void testGettingIdentifier() {
 		assertEquals(id,component.getIdentifier());
@@ -54,9 +59,19 @@ public abstract class ComponentTest {
 		assertNotNull(component.getEventDelegator());
 	}
 
+	@Test(expected=IllegalArgumentException.class)
+	public void testConstructingWithDelegatorWithNullIdentifier() {
+		getInstance(null, delegatorMock);
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testConstructingWithNullDelegator() {
+		getInstance(id, null);
+	}
+
 	@Test
 	public void creatingComponentWithDelegator() {
-		Component tempComponent = getInstanceWithDelegator(id, delegatorMock);
+		Component tempComponent = getInstance(id, delegatorMock);
 		assertSame(delegatorMock, tempComponent.getEventDelegator());
 		assertEquals(id, tempComponent.getIdentifier());
 	}
@@ -130,5 +145,5 @@ public abstract class ComponentTest {
 
 	protected abstract Component getInstance(String identifier);
 
-	protected abstract Component getInstanceWithDelegator(String identifier, ComponentEventDelegator delegator);
+	protected abstract Component getInstance(String identifier, ComponentEventDelegator delegator);
 }
