@@ -53,7 +53,7 @@ public class OpenFlispPerspectives implements ItemListener {
         String comboBoxItems[] = { SLSPERSPECTIVE, ASMPERSPECTIVE };
         
         //Create combobox for perspectives
-        JComboBox<String> cb = new JComboBox<String>(comboBoxItems);
+        JComboBox cb = new JComboBox(comboBoxItems);
         cb.setEditable(false);
         cb.addItemListener(this);
         comboBoxPane.add(cb);

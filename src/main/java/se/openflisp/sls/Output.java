@@ -56,6 +56,17 @@ public class Output extends Signal {
 	 * {@inheritDoc}
 	 */
 	@Override
+	protected void setState(Signal.State state) {
+		super.setState(state);
+		for (Input input : this.connections) {
+			input.setState(state);
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean connect(Signal signal) {
 		if (!(signal instanceof Input)) {
 			throw new IllegalArgumentException("An output can only be connected to an input.");
