@@ -6,7 +6,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
-public static class ListItemTransferable implements Transferable {
+public class ListItemTransferable implements Transferable {
 
     public static final DataFlavor LIST_ITEM_DATA_FLAVOR = new DataFlavor(ComponentView.class, "java/ListItem");
     private ComponentView listItem;

@@ -19,15 +19,18 @@ public class ListTransferHandler extends TransferHandler {
 
 	@Override
 	public boolean importData(TransferSupport support) {
+		System.out.println("importdata");
 		boolean accept = false;
 		if (canImport(support)) {
 			try {
 				ComponentView t =  (ComponentView) support.getTransferable();
 				Object value = t.getTransferData(ListItemTransferable.LIST_ITEM_DATA_FLAVOR);
+				System.out.println(value);
 				if (value instanceof ComponentView) {
 					Component component = support.getComponent();
+					System.out.println(component);
 					if (component instanceof JButton) {
-						((JButton)component).setText(((ComponentView)value).getImage());
+						//((JButton)component).setText(((ComponentView)value).getImage());
 					}
 				}
 			} catch (Exception exp) {
@@ -44,6 +47,7 @@ public class ListTransferHandler extends TransferHandler {
 
 	@Override
 	protected Transferable createTransferable(JComponent c) {
+		System.out.println(c);
 		Transferable t = null;
 		if (c instanceof Transferable) {
 			JList list = (JList) c;

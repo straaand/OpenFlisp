@@ -23,8 +23,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import bibliothek.extension.gui.dock.theme.EclipseTheme;
 import bibliothek.gui.DockController;
+import bibliothek.gui.DockTheme;
 import bibliothek.gui.dock.DefaultDockable;
 import bibliothek.gui.dock.SplitDockStation;
 import bibliothek.gui.dock.station.split.SplitDockGrid;
@@ -58,15 +62,21 @@ public class OpenFlispPerspectives implements ItemListener {
         cb.setEditable(false);
         cb.addItemListener(this);
         comboBoxPane.add(cb);
-         
+        
+        // Create theme
+        DockTheme theme = new EclipseTheme();
+        
         // Create slsPerspective
         DockController slsController = new DockController();
+        slsController.setTheme(theme);
         SplitDockStation slsStation = new SplitDockStation();
         slsController.add(slsStation);
         
         SplitDockGrid slsGrid = new SplitDockGrid();
-        slsGrid.addDockable(0, 0, 2, 1, new DefaultDockable("Komponenter"));
-        slsGrid.addDockable(0, 1, 1 ,1, new DefaultDockable("Kopplingsarea"));
+        DefaultDockable circuitBoard = new DefaultDockable(new CircuitBord());
+        circuitBoard.setTitleText("test");
+        slsGrid.addDockable(0, 0, 2, 1, circuitBoard);
+        slsGrid.addDockable(0, 0, 1 ,1, new OpenFlispComponents("kooplingsböx"));
         slsStation.dropTree( slsGrid.toTree());
         
         // Create asmPerspective

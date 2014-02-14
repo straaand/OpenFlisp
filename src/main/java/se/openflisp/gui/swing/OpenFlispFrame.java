@@ -58,6 +58,6 @@ public class OpenFlispFrame extends JFrame {
 	}
 	
 	//Create a border to highlight active OpenFlispPerspective
-	Border outline = BorderFactory.createLineBorder(Color.black);
+	//Border outline = BorderFactory.createLineBorder(Color.black);
 	
 }	

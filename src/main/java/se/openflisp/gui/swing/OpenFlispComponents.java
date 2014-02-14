@@ -15,16 +15,21 @@ import java.lang.*;
 
 import javax.swing.*;
 
-public class OpenFlispComponents extends JPanel{
+import bibliothek.gui.dock.DefaultDockable;
+
+public class OpenFlispComponents extends DefaultDockable {
 	//variables
 	private JList componentList;	//ComponentView to fill the JPanel
 	
 	//Constructor
-	public OpenFlispComponents () {
+	public OpenFlispComponents (String name) {
+		super(name);
+		
 		//Initiate the list
 		componentListFillerGates();
 		
 		//Enable drag and drop
+		
 		componentList.setCellRenderer(new Renderer());
 		componentList.setDragEnabled(true);
         componentList.setTransferHandler(new ListTransferHandler());
@@ -46,20 +51,13 @@ public class OpenFlispComponents extends JPanel{
 	}
 
 	public class Renderer implements ListCellRenderer {
-		public Component getListCellRendererComponent(
-				JList list, ComponentView value,
-				int index, boolean isSelected, boolean cellHasFocus) {
-			
-			JButton btn = new JButton(new ImageIcon(value.image));
-			return btn;
-			
-		}
-
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 			// TODO Auto-generated method stub
-			return null;
+			ComponentView view = (ComponentView) value;
+			JButton btn = new JButton(new ImageIcon(view.image));
+			return btn;
 		}
 		
 	}

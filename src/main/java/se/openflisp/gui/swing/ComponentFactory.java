@@ -50,6 +50,9 @@ public class ComponentFactory {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
-		} 
+		} catch (Exception e) {
+			System.out.println("oskars mamma:)");
+			return null;
+		}
 	}
 }
