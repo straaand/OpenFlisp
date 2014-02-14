@@ -68,6 +68,12 @@ public abstract class Component {
 	 * @param delegator		the component event delegator
 	 */
 	public Component(String identifier, ComponentEventDelegator delegator) {
+		if (identifier == null || identifier.isEmpty()) {
+			throw new IllegalArgumentException("Identifier can not be null or empty.");
+		}
+		if (delegator == null) {
+			throw new IllegalArgumentException("Delegator can not be null.");
+		}
 		this.identifier 	= identifier;
 		this.eventDelegator = delegator;
 	}
@@ -148,7 +154,7 @@ public abstract class Component {
 	 * @param state 		which state the output should be set to
 	 */
 	protected void setOutputState(String identifier, Signal.State state) {
-		this.outputs.get(identifier).setState(state);
+		this.getOutput(identifier).setState(state);
 	}
 	
 	/**
