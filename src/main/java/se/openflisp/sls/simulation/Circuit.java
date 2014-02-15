@@ -24,10 +24,11 @@ import se.openflisp.sls.Component;
 import se.openflisp.sls.Input;
 import se.openflisp.sls.Output;
 import se.openflisp.sls.Signal;
+import se.openflisp.sls.annotation.SourceComponent;
 import se.openflisp.sls.event.ComponentListener;
 
 /**
- * A logical cricuit of Components.
+ * A logical circuit of Components.
  * 
  * @author Anton Ekberg <anton.ekberg@gmail.com>
  * @version 1.0
@@ -70,6 +71,21 @@ public class Circuit {
 	 */
 	public Set<Component> getComponents() {
 		return Collections.unmodifiableSet(this.components);
+	}
+	
+	/**
+	 * Gets all the source Components in the Circuit.
+	 * 
+	 * @return set of all the source Components
+	 */
+	public Set<Component> getSourceComponents() {
+		Set<Component> components = new HashSet<Component>();
+		for (Component component : this.getComponents()) {
+			if (component.getClass().isAnnotationPresent(SourceComponent.class)) {
+				components.add(component);
+			}
+		}
+		return components;
 	}
 	
 	/**
