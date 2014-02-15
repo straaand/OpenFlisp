@@ -41,6 +41,20 @@ public class Circuit {
 	private Set<Component> components = new HashSet<Component>();
 	
 	/**
+	 * Thread that will evaluate the components if needed.
+	 */
+	private final CircuitSimulation simulationThread = new CircuitSimulation(this);
+	
+	/**
+	 * Gets the Circuit simulation handler thread.
+	 * 
+	 * @return the circuit simulation thread
+	 */
+	public CircuitSimulation getSimulation() {
+		return this.simulationThread;
+	}
+	
+	/**
 	 * Recursively adds a Component and its connected components to the Circuit.
 	 * 
 	 * @param component		base component that should be added
@@ -51,6 +65,7 @@ public class Circuit {
 		}
 		if (this.components.add(component)) {
 			component.getEventDelegator().addListener(this.connectionHandler);
+			component.getEventDelegator().addListener(this.simulationThread.signalHandler);
 			for (Input input : component.getInputs()) {
 				if (input.isConnected()) {
 					this.addComponent(input.getConnection().getOwner());
