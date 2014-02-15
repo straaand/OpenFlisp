@@ -17,7 +17,9 @@
 package se.openflisp.gui.swing;
 
 import java.awt.BorderLayout;
+
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -27,13 +29,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import bibliothek.extension.gui.dock.theme.EclipseTheme;
+import bibliothek.extension.gui.dock.theme.eclipse.EclipseColorScheme;
 import bibliothek.gui.DockController;
 import bibliothek.gui.DockTheme;
 import bibliothek.gui.dock.DefaultDockable;
 import bibliothek.gui.dock.SplitDockStation;
 import bibliothek.gui.dock.layout.DockableProperty;
 import bibliothek.gui.dock.station.split.SplitDockGrid;
+import bibliothek.gui.dock.util.DockProperties;
 import bibliothek.gui.dock.util.DockUtilities;
+import bibliothek.gui.dock.themes.ColorScheme;
 
 /**	
  * Create OpenFlisp Perspectives
@@ -57,20 +62,26 @@ public class OpenFlispPerspectives implements ItemListener {
 	public void addComponentToPane(Container pane) {
 		//Put the JComboBox in a JPanel to get a nicer look.
         JPanel comboBoxPane = new JPanel(); //use FlowLayout
+        comboBoxPane.setBackground(Color.darkGray);
         String comboBoxItems[] = { SLSPERSPECTIVE, ASMPERSPECTIVE };
         
         //Create combobox for perspectives
         JComboBox cb = new JComboBox(comboBoxItems);
         cb.setEditable(false);
         cb.addItemListener(this);
+        cb.setBackground(Color.BLACK);
+        cb.setIgnoreRepaint(true);
+        cb.setForeground(Color.WHITE);
         comboBoxPane.add(cb);
         
         // Create theme
         DockTheme theme = new EclipseTheme();
+
         
         // Create slsPerspective
         DockController slsController = new DockController();
         slsController.setTheme(theme);
+      
         SplitDockStation slsStation = new SplitDockStation();
         slsController.add(slsStation);
         

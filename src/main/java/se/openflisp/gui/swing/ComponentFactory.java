@@ -19,7 +19,7 @@ public class ComponentFactory {
 			}
 			else if (component instanceof ConstantGate {
 				//TODO add the ConstantGate components image to the component
-				 returnComponentView(component, ImageIO.read("file");
+				 return ComponentView(component, ImageIO.read("file");
 			}
 			else if (component instanceof AndGate){
 				//TODO add the AndGate components image to the component
