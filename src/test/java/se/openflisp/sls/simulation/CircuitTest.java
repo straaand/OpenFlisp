@@ -23,7 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import se.openflisp.sls.Component;
-import se.openflisp.sls.exception.ComponentEvaluationException;
 
 public class CircuitTest {
 
@@ -41,7 +40,7 @@ public class CircuitTest {
 	
 	protected Component mockComponent(String identifier) {
 		Component component = new Component(identifier) {
-			public void evaluate() throws ComponentEvaluationException {
+			public void evaluate() {
 				throw new IllegalStateException();
 			}
 		};

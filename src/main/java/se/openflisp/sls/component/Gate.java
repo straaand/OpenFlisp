@@ -19,7 +19,6 @@ package se.openflisp.sls.component;
 import se.openflisp.sls.Component;
 import se.openflisp.sls.Output;
 import se.openflisp.sls.Signal;
-import se.openflisp.sls.exception.ComponentEvaluationException;
 import se.openflisp.sls.event.ComponentEventDelegator;
 
 /**
@@ -75,7 +74,7 @@ public abstract class Gate extends Component {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void evaluate() throws ComponentEvaluationException {
+	public void evaluate() {
 		this.setOutputState(Gate.OUTPUT, this.evaluateOutput());
 	}
 }
