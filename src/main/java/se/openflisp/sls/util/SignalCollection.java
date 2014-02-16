@@ -34,8 +34,12 @@ public class SignalCollection {
 	 * @param signals	a collection of signals to check
 	 * @param state		the state that should be checked
 	 * @return true if the state is in the collection, false otherwise
+	 * @throws IllegalArgumentException if one of the parameters is null
 	 */
 	public static boolean containsState(Collection<? extends Signal> signals, Signal.State state) {
+		if (signals == null || state == null) {
+			throw new IllegalArgumentException("Requires a non-null collection and state.");
+		}
 		for (Signal signal : signals) {
 			if (signal.getState().equals(state)) {
 				return true;
