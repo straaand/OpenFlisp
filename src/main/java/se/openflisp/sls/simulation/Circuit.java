@@ -23,8 +23,8 @@ import java.util.Set;
 import se.openflisp.sls.Component;
 import se.openflisp.sls.Input;
 import se.openflisp.sls.Output;
-import se.openflisp.sls.Signal;
 import se.openflisp.sls.annotation.SourceComponent;
+import se.openflisp.sls.event.ComponentAdapter;
 import se.openflisp.sls.event.ComponentListener;
 import se.openflisp.sls.event.ListenerContext;
 
@@ -108,17 +108,11 @@ public class Circuit {
 	 * Listener that will add components that have been connected to one of 
 	 * the Circuits already existing components.
 	 */
-	private final ComponentListener connectionHandler = new ComponentListener() {
-		@Override
-		public void onSignalDisconnection(Input input, Output output) {}
-		
+	private final ComponentListener connectionHandler = new ComponentAdapter() {
 		@Override
 		public void onSignalConnection(Input input, Output output) {
 			Circuit.this.addComponent(input.getOwner());
 			Circuit.this.addComponent(output.getOwner());
 		}
-		
-		@Override
-		public void onSignalChange(Component component, Signal signal) {}
 	};
 }

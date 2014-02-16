@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 
 import se.openflisp.sls.Component;
 import se.openflisp.sls.Input;
-import se.openflisp.sls.Output;
 import se.openflisp.sls.Signal;
+import se.openflisp.sls.event.ComponentAdapter;
 import se.openflisp.sls.event.ComponentListener;
 
 /**
@@ -99,13 +99,7 @@ public class CircuitSimulation extends Thread {
 	/**
 	 * Listener that will put changed inputs into the input working queue.
 	 */
-	protected final ComponentListener signalHandler = new ComponentListener() {
-		@Override
-		public void onSignalDisconnection(Input input, Output output) {}
-		
-		@Override
-		public void onSignalConnection(Input input, Output output) {}
-		
+	protected final ComponentListener signalHandler = new ComponentAdapter() {
 		@Override
 		public void onSignalChange(Component component, Signal signal) {
 			if (signal instanceof Input) {
