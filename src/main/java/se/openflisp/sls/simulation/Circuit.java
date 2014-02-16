@@ -26,6 +26,7 @@ import se.openflisp.sls.Output;
 import se.openflisp.sls.Signal;
 import se.openflisp.sls.annotation.SourceComponent;
 import se.openflisp.sls.event.ComponentListener;
+import se.openflisp.sls.event.ListenerContext;
 
 /**
  * A logical circuit of Components.
@@ -64,8 +65,8 @@ public class Circuit {
 			throw new IllegalArgumentException("Component can not be null");
 		}
 		if (this.components.add(component)) {
-			component.getEventDelegator().addListener(this.connectionHandler);
-			component.getEventDelegator().addListener(this.simulationThread.signalHandler);
+			component.getEventDelegator().addListener(this.connectionHandler, ListenerContext.MODEL);
+			component.getEventDelegator().addListener(this.simulationThread.signalHandler, ListenerContext.MODEL);
 			for (Input input : component.getInputs()) {
 				if (input.isConnected()) {
 					this.addComponent(input.getConnection().getOwner());
