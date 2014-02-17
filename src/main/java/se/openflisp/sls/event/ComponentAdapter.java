@@ -14,37 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.openflisp.sls.util;
+package se.openflisp.sls.event;
 
-import java.util.Collection;
-
+import se.openflisp.sls.Component;
+import se.openflisp.sls.Input;
+import se.openflisp.sls.Output;
 import se.openflisp.sls.Signal;
 
 /**
- * Helper class for collections of Signals.
+ * Abstract adapter for ComponentListener.
  * 
  * @author Anton Ekberg <anton.ekberg@gmail.com>
  * @version 1.0
  */
-public class SignalCollection {
+public abstract class ComponentAdapter implements ComponentListener {
 
 	/**
-	 * Checks if a collection of Signals contains a specific state.
-	 * 
-	 * @param signals	a collection of signals to check
-	 * @param state		the state that should be checked
-	 * @return true if the state is in the collection, false otherwise
-	 * @throws IllegalArgumentException if one of the parameters is null
+	 * {@inheritDoc}
 	 */
-	public static boolean containsState(Collection<? extends Signal> signals, Signal.State state) {
-		if (signals == null || state == null) {
-			throw new IllegalArgumentException("Requires a non-null collection and state.");
-		}
-		for (Signal signal : signals) {
-			if (signal.getState().equals(state)) {
-				return true;
-			}
-		}
-		return false;
-	}
+	@Override
+	public void onSignalChange(Component component, Signal signal) {}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void onSignalConnection(Input input, Output output) {}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void onSignalDisconnection(Input input, Output output) {}
 }

@@ -74,6 +74,7 @@ public class Output extends Signal {
 		if (this.connections.add((Input) signal)) {
 			signal.connect(this);
 			this.getOwner().getEventDelegator().onSignalConnection((Input) signal, this);
+			signal.setState(this.getState());
 			return true;
 		}
 		return false;
@@ -90,6 +91,7 @@ public class Output extends Signal {
 		if (this.connections.remove(signal)) {
 			signal.disconnect(this);
 			this.getOwner().getEventDelegator().onSignalDisconnection((Input) signal, this);
+			signal.setState(Signal.State.FLOATING);
 			return true;
 		}
 		return false;

@@ -16,65 +16,58 @@
  */
 package se.openflisp.sls.component;
 
-import se.openflisp.sls.Component;
-import se.openflisp.sls.Output;
 import se.openflisp.sls.Signal;
+import se.openflisp.sls.annotation.SourceComponent;
 import se.openflisp.sls.event.ComponentEventDelegator;
 
 /**
- * Class representing a logical gate in a Sequential Logical Circuit.
- * A gate can have many inputs and only one output.
- * Extends the class Component.
+ * A Gate that will output a constant value.
  * 
- * @author Pär Svedberg <rockkuf@gmail.com>
  * @author Anton Ekberg <anton.ekberg@gmail.com>
  * @version 1.0
  */
-public abstract class Gate extends Component {
+@SourceComponent
+public class ConstantGate extends Gate {
 
 	/**
-	 * The single output for a logical gate.
+	 * State which the gate will constantly output.
 	 */
-	public static final String OUTPUT = "Q";
+	private final Signal.State state;
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @param state		state which the gate will constantly output
 	 */
-	public Gate(String identifier) {
+	public ConstantGate(String identifier, Signal.State state) {
 		super(identifier);
+		this.state = state;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @param state		state which the gate will constantly output
+	 */
+	public ConstantGate(String identifier, Signal.State state, ComponentEventDelegator delegator) {
+		super(identifier, delegator);
+		this.state = state;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Gets the state which the gate will constantly output.
+	 * 
+	 * @return the state which the gate will constantly output
 	 */
-	public Gate(String identifier, ComponentEventDelegator delegator) {
-		super(identifier, delegator);
+	public Signal.State getConstantState() {
+		return this.state;
 	}
-	
-	/**
-	 * Gets the single output of the gate.
-	 * 
-	 * @return the gate's output via its superclass' method
-	 */
-	public Output getOutput() {
-		return this.getOutput(Gate.OUTPUT);
-	}
-	
-	/**
-	 * Evaluate the gate's different inputs and provide a output signal.
-	 * 
-	 * If it is unable to decide a signal for the given inputs the method
-	 * must provide {@link Signal.State#FLOATING}.
-	 * 
-	 * @return the evaluated signal for the given inputs
-	 */
-	protected abstract Signal.State evaluateOutput();
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void evaluate() {
-		this.setOutputState(Gate.OUTPUT, this.evaluateOutput());
+	protected Signal.State evaluateOutput() {
+		return this.state;
 	}
 }

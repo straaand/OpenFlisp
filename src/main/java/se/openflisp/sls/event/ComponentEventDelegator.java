@@ -16,8 +16,7 @@
  */
 package se.openflisp.sls.event;
 
-import java.util.LinkedList;
-import java.util.List;
+import javax.swing.SwingUtilities;
 
 import se.openflisp.sls.Component;
 import se.openflisp.sls.Input;
@@ -30,29 +29,24 @@ import se.openflisp.sls.Signal;
  * @author Anton Ekberg <anton.ekberg@gmail.com>
  * @version 1.0
  */
-public class ComponentEventDelegator implements ComponentListener {
+public class ComponentEventDelegator extends EventDelegator<ComponentListener> implements ComponentListener {
 
-	/**
-	 * All listeners that should be notified when a event happens.
-	 */
-	private List<ComponentListener> listeners = new LinkedList<ComponentListener>();
-	
-	/**
-	 * Adds a listener that should be notified when a event happens.
-	 * 
-	 * @param listener	listener that should be notified when a event happens
-	 * @return true if the listener was added, false otherwise
-	 */
-	public boolean addListener(ComponentListener listener) {
-		return this.listeners.add(listener);
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */
   	@Override
-	public void onSignalChange(Component component, Signal signal) {
-		for (ComponentListener listener : this.listeners) {
+	public void onSignalChange(final Component component, final Signal signal) {
+		for (ComponentListener listener : this.getModelListeners()) {
+			listener.onSignalChange(component, signal);
+		}
+		for (final ComponentListener listener : this.getSwingListeners()) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					listener.onSignalChange(component, signal);
+				}
+			});
+		}
+		for (ComponentListener listener : this.getNormalListeners()) {
 			listener.onSignalChange(component, signal);
 		}
 	}
@@ -61,8 +55,18 @@ public class ComponentEventDelegator implements ComponentListener {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void onSignalConnection(Input input, Output output) {
-		for (ComponentListener listener : this.listeners) {
+	public void onSignalConnection(final Input input, final Output output) {
+		for (ComponentListener listener : this.getModelListeners()) {
+			listener.onSignalConnection(input, output);
+		}
+		for (final ComponentListener listener : this.getSwingListeners()) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					listener.onSignalConnection(input, output);
+				}
+			});
+		}
+		for (ComponentListener listener : this.getNormalListeners()) {
 			listener.onSignalConnection(input, output);
 		}
 	}
@@ -71,8 +75,18 @@ public class ComponentEventDelegator implements ComponentListener {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void onSignalDisconnection(Input input, Output output) {
-		for (ComponentListener listener : this.listeners) {
+	public void onSignalDisconnection(final Input input, final Output output) {
+		for (ComponentListener listener : this.getModelListeners()) {
+			listener.onSignalDisconnection(input, output);
+		}
+		for (final ComponentListener listener : this.getSwingListeners()) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					listener.onSignalDisconnection(input, output);
+				}
+			});
+		}
+		for (ComponentListener listener : this.getNormalListeners()) {
 			listener.onSignalDisconnection(input, output);
 		}
 	}

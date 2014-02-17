@@ -23,11 +23,13 @@ import java.util.Set;
 import se.openflisp.sls.Component;
 import se.openflisp.sls.Input;
 import se.openflisp.sls.Output;
-import se.openflisp.sls.Signal;
+import se.openflisp.sls.annotation.SourceComponent;
+import se.openflisp.sls.event.ComponentAdapter;
 import se.openflisp.sls.event.ComponentListener;
+import se.openflisp.sls.event.ListenerContext;
 
 /**
- * A logical cricuit of Components.
+ * A logical circuit of Components.
  * 
  * @author Anton Ekberg <anton.ekberg@gmail.com>
  * @version 1.0
@@ -40,6 +42,20 @@ public class Circuit {
 	private Set<Component> components = new HashSet<Component>();
 	
 	/**
+	 * Thread that will evaluate the components if needed.
+	 */
+	private final CircuitSimulation simulationThread = new CircuitSimulation(this);
+	
+	/**
+	 * Gets the Circuit simulation handler thread.
+	 * 
+	 * @return the circuit simulation thread
+	 */
+	public CircuitSimulation getSimulation() {
+		return this.simulationThread;
+	}
+	
+	/**
 	 * Recursively adds a Component and its connected components to the Circuit.
 	 * 
 	 * @param component		base component that should be added
@@ -49,7 +65,8 @@ public class Circuit {
 			throw new IllegalArgumentException("Component can not be null");
 		}
 		if (this.components.add(component)) {
-			component.getEventDelegator().addListener(this.connectionHandler);
+			component.getEventDelegator().addListener(this.connectionHandler, ListenerContext.MODEL);
+			component.getEventDelegator().addListener(this.simulationThread.signalHandler, ListenerContext.MODEL);
 			for (Input input : component.getInputs()) {
 				if (input.isConnected()) {
 					this.addComponent(input.getConnection().getOwner());
@@ -73,20 +90,29 @@ public class Circuit {
 	}
 	
 	/**
+	 * Gets all the source Components in the Circuit.
+	 * 
+	 * @return set of all the source Components
+	 */
+	public Set<Component> getSourceComponents() {
+		Set<Component> components = new HashSet<Component>();
+		for (Component component : this.getComponents()) {
+			if (component.getClass().isAnnotationPresent(SourceComponent.class)) {
+				components.add(component);
+			}
+		}
+		return components;
+	}
+	
+	/**
 	 * Listener that will add components that have been connected to one of 
 	 * the Circuits already existing components.
 	 */
-	private final ComponentListener connectionHandler = new ComponentListener() {
-		@Override
-		public void onSignalDisconnection(Input input, Output output) {}
-		
+	private final ComponentListener connectionHandler = new ComponentAdapter() {
 		@Override
 		public void onSignalConnection(Input input, Output output) {
 			Circuit.this.addComponent(input.getOwner());
 			Circuit.this.addComponent(output.getOwner());
 		}
-		
-		@Override
-		public void onSignalChange(Component component, Signal signal) {}
 	};
 }
