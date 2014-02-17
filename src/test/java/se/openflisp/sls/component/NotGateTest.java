@@ -36,7 +36,6 @@ import org.mockito.Mockito;
 public class NotGateTest extends GateTest {
 
 	private Gate notGate;
-	private Gate notGateSpy;
 
 	@Override
 	protected Gate getInstance(String identifier) {
@@ -52,7 +51,6 @@ public class NotGateTest extends GateTest {
 	public void before() {
 		super.setup();
 		notGate = new NotGate(gateName);
-		notGateSpy = Mockito.spy(notGate);
 	}
 
 	@Test
@@ -92,6 +90,12 @@ public class NotGateTest extends GateTest {
 			System.out.println(e.getMessage());
 		}
 		assertThat(notGate.getInputs().size(), is(2));
+		assertEquals(Signal.State.FLOATING, notGate.evaluateOutput());
+	}
+
+	@Test
+	public void testWithNoInput() {
+		assertThat(notGate.getInputs().size(), is(0));
 		assertEquals(Signal.State.FLOATING, notGate.evaluateOutput());
 	}
 
