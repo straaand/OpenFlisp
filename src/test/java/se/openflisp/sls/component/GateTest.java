@@ -56,7 +56,7 @@ public abstract class GateTest extends ComponentTest {
 	@Override
 	protected abstract Gate getInstance(String identifier, ComponentEventDelegator delegator);
 
-	public void helpEvaluatingOutputs(Signal.State[] states, Signal.State expectedState, Gate gateToHelp) {
+	public void helpEvaluatingOutput(Signal.State[] states, Signal.State expectedState, Gate gateToHelp) {
 		Map<Input, Signal.State> inputMocks = new HashMap<Input, Signal.State>();
 		for(Signal.State state : states) {
 			inputMocks.put(Mockito.mock(Input.class), state);

@@ -16,6 +16,7 @@
  */
 package se.openflisp.sls.component;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import se.openflisp.sls.Signal;
@@ -50,13 +51,13 @@ public class OrGateTest extends GateTest {
 	@Test
 	public void testEvaluatingOutputHIGH() {
 		Signal.State[] state = {Signal.State.HIGH};
-		helpEvaluatingOutputs(state, Signal.State.HIGH, orGate);
+		helpEvaluatingOutput(state, Signal.State.HIGH, orGate);
 	}
 
 	@Test
 	public void testEvaluatingOutputHIGH_TwoInputs() {
 		Signal.State[] states = {Signal.State.HIGH, Signal.State.HIGH};
-		helpEvaluatingOutputs(states, Signal.State.HIGH, orGate);
+		helpEvaluatingOutput(states, Signal.State.HIGH, orGate);
 	}
 
 	/* LOW INPUT */
@@ -64,13 +65,13 @@ public class OrGateTest extends GateTest {
 	@Test
 	public void testEvaluatingOutputLOW() {
 		Signal.State[] state = {Signal.State.LOW};
-		helpEvaluatingOutputs(state, Signal.State.LOW, orGate);
+		helpEvaluatingOutput(state, Signal.State.LOW, orGate);
 	}
 
 	@Test
 	public void testEvaluatingOutputLOW_TwoInputs() {
 		Signal.State[] states = {Signal.State.LOW, Signal.State.LOW};
-		helpEvaluatingOutputs(states, Signal.State.LOW, orGate);
+		helpEvaluatingOutput(states, Signal.State.LOW, orGate);
 	}
 
 	/* FLOATING INPUT */
@@ -78,13 +79,13 @@ public class OrGateTest extends GateTest {
 	@Test
 	public void testEvaluatingOutputFLOATING() {
 		Signal.State[] state = {Signal.State.FLOATING};
-		helpEvaluatingOutputs(state, Signal.State.FLOATING, orGate);
+		helpEvaluatingOutput(state, Signal.State.FLOATING, orGate);
 	}
 
 	@Test
 	public void testEvaluatingOutputFLOATING_TwoInputs() {
 		Signal.State[] states = {Signal.State.FLOATING, Signal.State.FLOATING};
-		helpEvaluatingOutputs(states, Signal.State.FLOATING, orGate);
+		helpEvaluatingOutput(states, Signal.State.FLOATING, orGate);
 	}
 
 	/* VARIABLE INPUT - HIGH OUTPUT */
@@ -92,25 +93,25 @@ public class OrGateTest extends GateTest {
 	@Test
 	public void testEvaluatingOutputHIGHandLOW() {
 		Signal.State[] states = {Signal.State.HIGH, Signal.State.LOW};
-		helpEvaluatingOutputs(states, Signal.State.HIGH, orGate);
+		helpEvaluatingOutput(states, Signal.State.HIGH, orGate);
 	}
 	
 	@Test
 	public void testEvaluatingOutputLOWandHigh() {
 		Signal.State[] states = {Signal.State.LOW, Signal.State.HIGH};
-		helpEvaluatingOutputs(states, Signal.State.HIGH, orGate);
+		helpEvaluatingOutput(states, Signal.State.HIGH, orGate);
 	}
 	
 	@Test
 	public void testEvaluatingOutputHIGHandFLOATING() {
 		Signal.State[] states = {Signal.State.HIGH, Signal.State.FLOATING};
-		helpEvaluatingOutputs(states, Signal.State.HIGH, orGate);
+		helpEvaluatingOutput(states, Signal.State.HIGH, orGate);
 	}
 
 	@Test
 	public void testEvaluatingOutputFLOATINGandHIGH() {
 		Signal.State[] states = {Signal.State.FLOATING, Signal.State.HIGH};
-		helpEvaluatingOutputs(states, Signal.State.HIGH, orGate);
+		helpEvaluatingOutput(states, Signal.State.HIGH, orGate);
 	}
 
 	/* VARIABLE INPUT - FLOATING OUTPUT */
@@ -118,13 +119,13 @@ public class OrGateTest extends GateTest {
 	@Test
 	public void testEvaluatingOutputLOWandFLOATING() {
 		Signal.State[] states = {Signal.State.LOW, Signal.State.FLOATING};
-		helpEvaluatingOutputs(states, Signal.State.FLOATING, orGate);
+		helpEvaluatingOutput(states, Signal.State.FLOATING, orGate);
 	}
 
 	@Test
 	public void testEvaluatingOutputFLOATINGandLOW() {
 		Signal.State[] states = {Signal.State.FLOATING, Signal.State.LOW};
-		helpEvaluatingOutputs(states, Signal.State.FLOATING, orGate);
+		helpEvaluatingOutput(states, Signal.State.FLOATING, orGate);
 	}
 
 }
