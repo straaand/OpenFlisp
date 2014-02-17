@@ -79,7 +79,7 @@ public class NotGateTest extends GateTest {
 		Input inputMock2 = Mockito.mock(Input.class);
 		Mockito.when(inputMock2.getState()).thenReturn(Signal.State.LOW);
 		
-		Map hashMap = new HashMap<String, Input>();
+		Map<String, Input> hashMap = new HashMap<String, Input>();
 		hashMap.put(id,inputMock1);
 		hashMap.put("identifier2",inputMock2);
 		try {
@@ -113,7 +113,7 @@ public class NotGateTest extends GateTest {
 	public void addInputMock1ToInputs(Signal.State state) {
 		Mockito.when(inputMock1.getState()).thenReturn(state);
 
-		Map hashMap = new HashMap<String, Input>();
+		Map<String, Input> hashMap = new HashMap<String, Input>();
 		hashMap.put(id, inputMock1);
 		try {
 			Field field = Component.class.getDeclaredField("inputs");
