@@ -182,4 +182,18 @@ public class OutputTest extends SignalTest {
 		instance.disconnect(input1);
 		verify(delegator).onSignalDisconnection(input1, instance);
 	}
+	
+	@Test
+	public void testConnectUpdatesStateOfInput() {
+		instance.setState(Signal.State.HIGH);
+		instance.connect(input1);
+		verify(input1).setState(Signal.State.HIGH);
+	}
+	
+	public void testDisconnectSetsInputFloating() {
+		instance.setState(Signal.State.HIGH);
+		instance.connect(input1);
+		instance.disconnect(input1);
+		verify(input1).setState(Signal.State.FLOATING);
+	}
 }

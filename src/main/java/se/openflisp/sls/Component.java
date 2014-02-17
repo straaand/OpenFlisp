@@ -17,7 +17,6 @@
 package se.openflisp.sls;
 
 import se.openflisp.sls.event.ComponentEventDelegator;
-import se.openflisp.sls.exception.ComponentEvaluationException;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -162,11 +161,11 @@ public abstract class Component {
 	 */
 	@Override
 	public String toString() {
-		return String.format("%s[#%s]", this.getClass(), this.identifier);
+		return String.format("%s[#%s]", this.getClass().getSimpleName(), this.identifier);
 	}
 	
 	/**
 	 * Evaluates the components inputs and produces changes on its outputs.
 	 */
-	public abstract void evaluate() throws ComponentEvaluationException;
+	public abstract void evaluate();
 }
