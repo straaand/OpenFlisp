@@ -88,6 +88,13 @@ public class OrGateTest extends GateTest {
 		helpEvaluatingOutput(states, Signal.State.FLOATING, orGate);
 	}
 
+	@Test
+	public void testEvaluatingOutputFLOATING_noInput() {
+		assertThat(orGate.getInputs().size(), is(0));
+		assertEquals(Signal.State.FLOATING, orGate.evaluateOutput());
+		assertThat(orGate.getInputs().size(), is(0));
+	}
+
 	/* VARIABLE INPUT - HIGH OUTPUT */
 
 	@Test
