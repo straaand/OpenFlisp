@@ -21,12 +21,16 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.event.MouseInputListener;
 
 import bibliothek.extension.gui.dock.theme.EclipseTheme;
 import bibliothek.extension.gui.dock.theme.eclipse.EclipseColorScheme;
@@ -40,6 +44,8 @@ import bibliothek.gui.dock.util.DockProperties;
 import bibliothek.gui.dock.util.DockUtilities;
 import bibliothek.gui.dock.themes.ColorScheme;
 
+import java.awt.*;
+import java.awt.event.*;
 /**	
  * Create OpenFlisp Perspectives
  * 
@@ -47,12 +53,16 @@ import bibliothek.gui.dock.themes.ColorScheme;
  * @version 1.0
  * 
  */
-public class OpenFlispPerspectives implements ItemListener {
+public class OpenFlispPerspectives extends JPanel implements ItemListener, ActionListener {
 	// Define perspectives 
-	JPanel perspective;
 	final static String SLSPERSPECTIVE = "Syncronous logic simulation";
     final static String ASMPERSPECTIVE = "DigiFLISP Simulation";
-	
+    
+    // 
+    private CircuitBord circuitBoard;
+	public OpenFlispPerspectives() {
+		this.setLayout(new CardLayout());
+	}	
     /**
 	 * Gets a contentpane on which a combobox and the choosen perspective
 	 * is added.
@@ -86,9 +96,9 @@ public class OpenFlispPerspectives implements ItemListener {
         slsController.add(slsStation);
         
         SplitDockGrid slsGrid = new SplitDockGrid();
-        DefaultDockable circuitBoard = new DefaultDockable(new CircuitBord());
-        circuitBoard.setTitleText("test");
-        slsGrid.addDockable(0, 0, 2, 1, circuitBoard);
+        
+        circuitBoard = new CircuitBord();
+        slsGrid.addDockable(0, 0, 2, 1, new DefaultDockable(circuitBoard));
         slsGrid.addDockable(0, 0, 1 ,1, new OpenFlispComponents("kooplingsböx"));
         slsStation.dropTree( slsGrid.toTree());
         
@@ -104,13 +114,12 @@ public class OpenFlispPerspectives implements ItemListener {
         //TODO DRY 
         
         //Create the panel that contains the "cards".
-        perspective = new JPanel(new CardLayout());
-        perspective.add(slsStation,SLSPERSPECTIVE);
-        perspective.add(asmStation,ASMPERSPECTIVE);
+        this.add(slsStation,SLSPERSPECTIVE);
+        this.add(asmStation,ASMPERSPECTIVE);
                  
         //Populate the combobox
         pane.add(comboBoxPane, BorderLayout.PAGE_START);
-        pane.add(perspective, BorderLayout.CENTER);
+        pane.add(this, BorderLayout.CENTER);
         
 	}
 	/**
@@ -118,7 +127,11 @@ public class OpenFlispPerspectives implements ItemListener {
 	 * the cardlayout switches to another perspective.
 	 */
 	public void itemStateChanged(ItemEvent evt) {
-	        CardLayout cl = (CardLayout)(perspective.getLayout());
-	        cl.show(perspective, (String)evt.getItem());
+	        CardLayout cl = (CardLayout)(this.getLayout());
+	        cl.show(this, (String)evt.getItem());
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		
 	}
 }

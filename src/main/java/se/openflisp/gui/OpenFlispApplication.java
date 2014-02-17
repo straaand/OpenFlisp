@@ -16,6 +16,8 @@
  */
 package se.openflisp.gui;
 
+import javax.swing.SwingUtilities;
+
 import se.openflisp.gui.swing.OpenFlispFrame;
 
 /**	
@@ -49,8 +51,17 @@ public class OpenFlispApplication {
 	}
 
 	public static void main(String[] args) {
-		OpenFlispApplication application = new OpenFlispApplication();
-		application.initialize();
+		SwingUtilities.invokeLater(new Runnable(){
+
+			@Override
+			public void run() {
+				OpenFlispApplication application = new OpenFlispApplication();
+				application.initialize();
+			}
+			
+			
+		});
+		
 	}
 
 }
