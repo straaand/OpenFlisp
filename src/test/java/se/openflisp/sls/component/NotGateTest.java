@@ -97,6 +97,7 @@ public class NotGateTest extends GateTest {
 	public void testWithNoInput() {
 		assertThat(notGate.getInputs().size(), is(0));
 		assertEquals(Signal.State.FLOATING, notGate.evaluateOutput());
+		assertThat(notGate.getInputs().size(), is(0));
 	}
 
 	@Test
