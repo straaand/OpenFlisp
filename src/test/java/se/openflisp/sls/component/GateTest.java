@@ -56,17 +56,30 @@ public abstract class GateTest extends ComponentTest {
 	@Override
 	protected abstract Gate getInstance(String identifier, ComponentEventDelegator delegator);
 
-	public void helpEvaluatingOutput(Signal.State[] states, Signal.State expectedState, Gate gateToHelp) {
+	/**
+	 * Function to help evaluate output for a gate
+	 * 
+	 * @inputStates array with states that gate should have
+	 * @expectedOutput the output that the gate is expected to give when evaluated
+	 * @gateToEvaluate the gate to test evaluation on
+	 */
+	public void helpEvaluatingOutput(Signal.State[] inputStates, Signal.State expectedOutput, Gate gateToEvaluate) {
 		Map<Input, Signal.State> inputMocks = new HashMap<Input, Signal.State>();
-		for(Signal.State state : states) {
+		for(Signal.State state : inputStates) {
 			inputMocks.put(Mockito.mock(Input.class), state);
 		}
-		Gate gateWithNewInputs = addInputMockToInputs(inputMocks, gateToHelp);
-		assertThat(gateWithNewInputs.getInputs().size(), is(states.length));
-		assertEquals(expectedState, gateWithNewInputs.evaluateOutput());
+		Gate gateWithNewInputs = addInputMockToInputs(inputMocks, gateToEvaluate);
+		assertThat(gateWithNewInputs.getInputs().size(), is(inputStates.length));
+		assertEquals(expectedOutput, gateWithNewInputs.evaluateOutput());
 	}
 
-	public Gate addInputMockToInputs(Map<Input, Signal.State> inputMocks, Gate gateToHelp) {
+	/**
+	 * Function to help add mocked inputs
+	 * 
+	 * @inputMocks map with mocked inputs and what state the input should have
+	 * @gateToChangeInputsOn the gate to change inputs on
+	 */
+	public Gate addInputMockToInputs(Map<Input, Signal.State> inputMocks, Gate gateToChangeInputsOn) {
 		Map<String, Input> newMap = new HashMap<String, Input>();
 
 		int	i = 0; 
@@ -80,13 +93,13 @@ public abstract class GateTest extends ComponentTest {
 		try {
 			Field field = Component.class.getDeclaredField("inputs");
 			field.setAccessible(true);
-			field.set(gateToHelp, newMap);
+			field.set(gateToChangeInputsOn, newMap);
 		} catch (NoSuchFieldException e) {
 			System.out.println(e.getMessage());
 		} catch (IllegalAccessException e) {
 			System.out.println(e.getMessage());
 		}
-		return gateToHelp;
+		return gateToChangeInputsOn;
 	}
 
 }
