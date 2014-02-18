@@ -37,7 +37,7 @@ public class ComponentView implements Transferable{
 	public Object getTransferData(DataFlavor flavor)
 			throws UnsupportedFlavorException, IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return (Object)this;
 	}
 
 }

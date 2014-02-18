@@ -8,6 +8,12 @@ import java.awt.GridLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -20,13 +26,15 @@ import javax.swing.JPanel;
 
 import se.openflisp.sls.Component;
 import se.openflisp.sls.simulation.Circuit;
-
 import bibliothek.gui.dock.DefaultDockable;
 
-public class CircuitBord extends JPanel{
+public class CircuitBord extends JPanel implements DropTargetListener{
 	Circuit circuit;
 	private JLabel coordinates;
 	private CircuitBoardListener MouseListener = new CircuitBoardListener();
+	
+	//Oskar testar
+	private DropTarget dropTarget;
 	
 	public CircuitBord(){
 		this.coordinates = new JLabel("0:0");
@@ -35,6 +43,11 @@ public class CircuitBord extends JPanel{
 		setName("test");
 		addMouseListener(MouseListener);
 		addMouseMotionListener(MouseListener);
+		
+		this.setTransferHandler( new CircuitBordTransferHandler() );
+		//Oskar Testar
+		dropTarget = new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE,
+		        this, true, null);
 	}
 	
 	@Override
@@ -69,5 +82,39 @@ public class CircuitBord extends JPanel{
 		  {      
 		      g.drawLine(0, i, gridWidth, i);          
 		  } 
+	}
+
+	@Override
+	public void dragEnter(DropTargetDragEvent arg0) {
+		System.out.println("DU HAR DARGIT IN NÅGOT TILL DROPWINDOW");
+		//nothing to do here.
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void dragExit(DropTargetEvent arg0) {
+		System.out.println("DU HAR DRAGIT UT NÅGOT UR DROPWINDOW");
+		//Nothing to do here
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void dragOver(DropTargetDragEvent arg0) {
+		System.out.println("DU DRAR NÅGOT ÖVER DROPWINDOW");
+		//nothing to do here
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void drop(DropTargetDropEvent arg0) {
+		System.out.println("DU HAR SLÄPPT NÅGOT I DROPWINDOW");
+		//create a _new_ gate at the dropped location
+		// TODO make the JPanel add the dropped item (if it is a componentView)
+	}
+
+	@Override
+	public void dropActionChanged(DropTargetDragEvent arg0) {
+		System.out.println("VA FAN ÄR DETTA?");
+		// TODO Auto-generated method stub
 	}
 }

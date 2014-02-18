@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -17,13 +18,17 @@ import javax.swing.*;
 
 import bibliothek.gui.dock.DefaultDockable;
 
-public class OpenFlispComponents extends DefaultDockable {
+public class OpenFlispComponents extends DefaultDockable implements Transferable{
 	//variables
 	private JList componentList;	//ComponentView to fill the JPanel
+	
+	private ComponentView testGate;
 	
 	//Constructor
 	public OpenFlispComponents (String name) {
 		super(name);
+		
+		testGate = ComponentFactory.createViewFromComponent(null);
 		
 		//Initiate the list
 		componentListFillerGates();
@@ -33,7 +38,7 @@ public class OpenFlispComponents extends DefaultDockable {
 		componentList.setCellRenderer(new Renderer());
 		componentList.setDragEnabled(true);
         componentList.setTransferHandler(new ListTransferHandler());
-		
+        
         //add the componentList to the JPanel
         this.add(componentList);
 	}
@@ -56,8 +61,9 @@ public class OpenFlispComponents extends DefaultDockable {
 				int index, boolean isSelected, boolean cellHasFocus) {
 			// TODO Auto-generated method stub
 			ComponentView view = (ComponentView) value;
-			JButton btn = new JButton(new ImageIcon(view.image));
-			return btn;
+			
+			JLabel label = new JLabel(new ImageIcon(view.image));
+			return label;
 		}
 		
 	}
@@ -69,7 +75,8 @@ public class OpenFlispComponents extends DefaultDockable {
 
 	public boolean isDataFlavorSupported(DataFlavor flavor) {
 		// TODO Auto-generated method stub
-		return false;
+		System.out.println("TESTTESTTTEST");
+		return true;
 	}
 
 	public Object getTransferData(DataFlavor flavor)

@@ -9,32 +9,45 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 
 public class ComponentFactory {
-
+	/**
+	private Image notGateImg = new Image ("BILDEN");
+	private Image constantGateImg = new Image ("BILDEN");
+	private Image andGateImg = new Image ("BILDEN");
+	private Image xorGateImg = new Image ("BILDEN");
+	private Image nandGateImg = new Image ("BILDEN");
+	private Image NorGateImg = new Image ("BILDEN");
+	*/
 	public static ComponentView createViewFromComponent(Component component) {
 
 		try {
 			/**if (component instanceof NotGate) {
 				//TODO add the NotGate components image to the component
+				//make sure the gate choose the right number of inputs
 				return ComponentView(component, ImageIO.read("file");
 			}
 			else if (component instanceof ConstantGate {
 				//TODO add the ConstantGate components image to the component
+				//make sure the gate choose the right number of inputs
 				 return ComponentView(component, ImageIO.read("file");
 			}
 			else if (component instanceof AndGate){
 				//TODO add the AndGate components image to the component
+				//make sure the gate choose the right number of inputs
 				return ComponentView(component, ImageIO.read("file");	
 						}
 			else if (component instanceof XorGate) {
 				//TODO add the XorGate components image to the component
+				//make sure the gate choose the right number of inputs
 				return ComponentView(component, ImageIO.read("file");
 			}
 			else if (component instanceof NandGate) {
 				//TODO add the NandGate components image to the component
+				//make sure the gate choose the right number of inputs
 				return ComponentView(component, ImageIO.read("file");
 			}
 			else if (component instanceof NorGate) {
 				//TODO add the NorGate components image to the component
+				//make sure the gate choose the right number of inputs
 				return ComponentView(component, ImageIO.read("file");
 			}*/
 
