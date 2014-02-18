@@ -13,14 +13,15 @@ import javax.swing.KeyStroke;
 /**
  * Creates the menubar and its items
  * 
- * @author Johan Strand straaand@gmail.com
+ * @author Johan Strand <straaand@gmail.com>
  * @version 1.0
  *
  */
 
 public class OpenFlispMenu implements ActionListener {
 	JMenuBar menubar;
-	JMenuItem menu_item1, menu_item2, menu_close, menu2;
+	JMenu menu2;
+	JMenuItem menu_item1, menu_close, menu_about;
 	OpenFlispFrame frame;
 	
 	/*
@@ -50,9 +51,13 @@ public class OpenFlispMenu implements ActionListener {
 		        KeyEvent.VK_2, ActionEvent.ALT_MASK)); //close with alt-2
 		
 		/* The second menu */
-		menu2 = new JMenuItem("Hjälp");
-		menu2.addActionListener(this);
+		menu2 = new JMenu("Hjälp");
+		menu_about = new JMenuItem("Om OpenFlisp");
+		menu2.add(menu_about);
+		menu_about.addActionListener(this);
 		menubar.add(menu2);
+		
+		
 	}
 	
 	public void actionPerformed(ActionEvent e)	{
@@ -61,7 +66,7 @@ public class OpenFlispMenu implements ActionListener {
 			System.exit(0);
 		}
 		//show the Help menu
-		if (e.getSource() == menu2)	{
+		if (e.getSource() == menu_about)	{
 			JOptionPane.showMessageDialog(null,"Detta är en prototyp. \nVersion: 2014-01-31\nAv: Johan & Fiona","OpenFlisp", JOptionPane.INFORMATION_MESSAGE);
 		}
 		//open the logic simulation
