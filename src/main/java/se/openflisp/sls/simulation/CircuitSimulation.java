@@ -102,7 +102,7 @@ public class CircuitSimulation extends Thread {
 	 */
 	protected void processInput(Input input) {
 		Component component = input.getOwner();
-		if (this.componentQueue.contains(component)) {
+		if (!this.componentQueue.contains(component)) {
 			this.componentQueue.add(component);
 		}
 	}
