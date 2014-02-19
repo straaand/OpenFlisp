@@ -49,9 +49,9 @@ public class OrGateTest extends GateTest {
 	/* HIGH INPUT */
 
 	@Test
-	public void testEvaluatingOutputHIGH() {
+	public void testEvaluatingOutput_OneHIGHInput() {
 		Signal.State[] state = {Signal.State.HIGH};
-		helpEvaluatingOutput(state, Signal.State.HIGH, orGate);
+		helpEvaluatingOutput(state, Signal.State.FLOATING, orGate);
 	}
 
 	@Test
@@ -63,9 +63,9 @@ public class OrGateTest extends GateTest {
 	/* LOW INPUT */
 
 	@Test
-	public void testEvaluatingOutputLOW() {
+	public void testEvaluatingOutput_OneLOWInput() {
 		Signal.State[] state = {Signal.State.LOW};
-		helpEvaluatingOutput(state, Signal.State.LOW, orGate);
+		helpEvaluatingOutput(state, Signal.State.FLOATING, orGate);
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class OrGateTest extends GateTest {
 	/* FLOATING INPUT */
 
 	@Test
-	public void testEvaluatingOutputFLOATING() {
+	public void testEvaluatingOutput_OneFLOATINGInput() {
 		Signal.State[] state = {Signal.State.FLOATING};
 		helpEvaluatingOutput(state, Signal.State.FLOATING, orGate);
 	}

@@ -49,7 +49,7 @@ public class OrGate extends Gate {
 		Collection<Input> inputCollection = getInputs();
 		boolean floatingPresent = false;
 
-		if(inputCollection.size() == 0) {
+		if(inputCollection.size() < 2) {
 			return Signal.State.FLOATING;
 		}
 		for(Input i : inputCollection) {
