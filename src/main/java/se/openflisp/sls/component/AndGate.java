@@ -18,52 +18,46 @@ package se.openflisp.sls.component;
 
 import se.openflisp.sls.*;
 import se.openflisp.sls.event.ComponentEventDelegator;
-import java.util.Collection;
+import se.openflisp.sls.util.SignalCollection;
 
 /**
- * An OrGate Component.
+ * Class representing a logical AND-gate.
  * 
- * @author Hannes Elvemyr <hannes88@gmail.com>
+ * @author Pär Svedberg <rockkuf@gmail.com>
  * @version 1.0
  */
-public class OrGate extends Gate {
+
+public class AndGate extends Gate {
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public OrGate(String identifier) {
+	public AndGate(String identifier) {
 		super(identifier);
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
-	public OrGate(String identifier, ComponentEventDelegator delegator) {
+	public AndGate(String identifier, ComponentEventDelegator delegator) {
 		super(identifier, delegator);
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Signal.State evaluateOutput() {
-		Collection<Input> inputCollection = getInputs();
-		boolean floatingPresent = false;
-
-		if(inputCollection.size() < 2) {
-			return Signal.State.FLOATING;
+		if (this.getInputs().size() < 2) {
+				return Signal.State.FLOATING;
 		}
-		for(Input i : inputCollection) {
-			Signal.State currentState = i.getState();
-			if(currentState == Signal.State.HIGH) {
-				return Signal.State.HIGH;
-			} else  if(currentState == Signal.State.FLOATING) {
-				floatingPresent = true;
-			}
-		}
-		if(floatingPresent) {
-			return Signal.State.FLOATING;
-		} else {
+		if (SignalCollection.containsState(this.getInputs(), Signal.State.LOW)) {
 			return Signal.State.LOW;
 		}
+		if (SignalCollection.containsState(this.getInputs(), Signal.State.FLOATING)) {
+			return Signal.State.FLOATING;
+		}
+		return Signal.State.HIGH;
 	}
+
 }
