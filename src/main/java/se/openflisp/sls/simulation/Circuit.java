@@ -81,6 +81,16 @@ public class Circuit {
 	}
 	
 	/**
+	 * Checks if the Component is in the Circuit.
+	 * 
+	 * @param component		component to check
+	 * @return true if the Component exists, false otherwise
+	 */
+	public boolean contains(Component component) {
+		return this.getComponents().contains(component);
+	}
+	
+	/**
 	 * Gets all the Components in the Circuit.
 	 * 
 	 * @return unmodifiable set of all the Components
