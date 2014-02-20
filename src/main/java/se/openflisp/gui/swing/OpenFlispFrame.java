@@ -18,23 +18,11 @@ package se.openflisp.gui.swing;
 
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
+import java.awt.Dimension;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.border.Border;
 
 import se.openflisp.gui.swing.OpenFlispPerspectives;
 
@@ -45,6 +33,7 @@ import se.openflisp.gui.swing.OpenFlispPerspectives;
  * @author Daniel Svensson <daniel@dsit.se>
  * @version 1.0
  */
+@SuppressWarnings("serial")
 public class OpenFlispFrame extends JFrame {
 	
 	private OpenFlispPerspectives perspectives;
