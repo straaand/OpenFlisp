@@ -24,6 +24,7 @@ import se.openflisp.sls.Component;
 import se.openflisp.sls.Input;
 import se.openflisp.sls.Output;
 import se.openflisp.sls.annotation.SourceComponent;
+import se.openflisp.sls.event.CircuitEventDelegator;
 import se.openflisp.sls.event.ComponentAdapter;
 import se.openflisp.sls.event.ComponentListener;
 import se.openflisp.sls.event.ListenerContext;
@@ -47,6 +48,39 @@ public class Circuit {
 	private final CircuitSimulation simulationThread = new CircuitSimulation(this);
 	
 	/**
+	 * Delegates events that happens in the Circuit.
+	 */
+	private final CircuitEventDelegator delegator;
+	
+	/**
+	 * Constructs a new Circuit.
+	 */
+	public Circuit() {
+		this(new CircuitEventDelegator());
+	}
+	
+	/**
+	 * Constructs a new Circuit with a delegator.
+	 * 
+	 * @param delegator		the circuit event delegator
+	 */
+	public Circuit(CircuitEventDelegator delegator) {
+		if (delegator == null) {
+			throw new IllegalArgumentException("Delegator can not be null.");
+		}
+		this.delegator = delegator;
+	}
+	
+	/**
+	 * Gets the event delegator for the Component.
+	 * 
+	 * @return event delegator for the Component
+	 */
+	public CircuitEventDelegator getEventDelegator() {
+		return this.delegator;
+	}
+	
+	/**
 	 * Gets the Circuit simulation handler thread.
 	 * 
 	 * @return the circuit simulation thread
@@ -65,8 +99,8 @@ public class Circuit {
 			throw new IllegalArgumentException("Component can not be null");
 		}
 		if (this.components.add(component)) {
-			component.getEventDelegator().addListener(this.connectionHandler, ListenerContext.MODEL);
-			component.getEventDelegator().addListener(this.simulationThread.signalHandler, ListenerContext.MODEL);
+			component.getEventDelegator().addListener(ListenerContext.MODEL, this.connectionHandler);
+			component.getEventDelegator().addListener(ListenerContext.MODEL, this.simulationThread.signalHandler);
 			for (Input input : component.getInputs()) {
 				if (input.isConnected()) {
 					this.addComponent(input.getConnection().getOwner());
@@ -77,6 +111,7 @@ public class Circuit {
 					this.addComponent(input.getOwner());
 				}
 			}
+			this.getEventDelegator().onComponentAdded(component);
 		}
 	}
 	

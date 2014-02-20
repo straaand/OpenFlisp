@@ -18,7 +18,6 @@ package se.openflisp.sls;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,11 +49,6 @@ public abstract class ComponentTest {
 	}
 
 	@Test
-	public void testGettingIdentifier() {
-		assertEquals(id,component.getIdentifier());
-	}
-
-	@Test
 	public void gettingEventDelegatorNotNull() {
 		assertNotNull(component.getEventDelegator());
 	}
@@ -70,10 +64,15 @@ public abstract class ComponentTest {
 	}
 
 	@Test
-	public void creatingComponentWithDelegator() {
-		Component tempComponent = getInstance(id, delegatorMock);
-		assertSame(delegatorMock, tempComponent.getEventDelegator());
-		assertEquals(id, tempComponent.getIdentifier());
+	public void testGettingEventDelegator() {
+		Component component = getInstance(id, delegatorMock);
+		assertSame(delegatorMock, component.getEventDelegator());
+	}
+	
+	@Test
+	public void testGettingIdentifier() {
+		Component component = getInstance(id, delegatorMock);
+		assertEquals(id, component.getIdentifier());
 	}
 
 	@Test
@@ -83,20 +82,20 @@ public abstract class ComponentTest {
 
 	@Test
 	public void testGettingInputReturnsSameObject() {
-		Input tempInput1 = component.getInput(id);
-		Input tempInput2 = component.getInput(id);
-		assertSame(tempInput1, tempInput2);
+		assertSame(component.getInput(id), component.getInput(id));
 	}
 
 	@Test
-	public void testGettingInputAddsToCollection() {
-		assertThat(component.getInputs().size(), is(0));
-		Input tempInput1 = component.getInput(id);
-		assertThat(component.getInputs().size(), is(1));
-		Input tempInput2 = component.getInput(id);
-		assertThat(component.getInputs().size(), is(1));
-		Input tempInput3 = component.getInput("identifier2");
-		assertThat(component.getInputs().size(), is(2));
+	public void testGettingInput() {
+		Input input = component.getInput(id);
+		assertThat(component.getInputs(), hasItem(input));
+	}
+	
+	@Test
+	public void testGettingInputs() {
+		Input input = component.getInput(id);
+		Input input2 = component.getInput("identifier2");
+		assertThat(component.getInputs(), hasItems(input, input2));
 	}
 
 	@Test
@@ -119,14 +118,16 @@ public abstract class ComponentTest {
 	}
 
 	@Test
-	public void testGettingOutputAddsToCollection() {
-		assertThat(component.getOutputs().size(), is(0));
-		Output tempOutput1 = component.getOutput(id);
-		assertThat(component.getOutputs().size(), is(1));
-		Output tempOutput2 = component.getOutput(id);
-		assertThat(component.getOutputs().size(), is(1));
-		Output tempOutput3 = component.getOutput("identifier2");
-		assertThat(component.getOutputs().size(), is(2));
+	public void testGettingOutput() {
+		Output output = component.getOutput(id);
+		assertThat(component.getOutputs(), hasItem(output));
+	}
+	
+	@Test
+	public void testGettingOutputs() {
+		Output output = component.getOutput(id);
+		Output output2 = component.getOutput("identifier2");
+		assertThat(component.getOutputs(), hasItems(output, output2));
 	}
 
 	@Test
@@ -136,12 +137,11 @@ public abstract class ComponentTest {
 		assertNotSame(tempOutput1, tempOutput2);
 	}
 
-	/* Does not work... setOutputState() is protected.
 	@Test
 	public void testSettingOutputState() {
-		component.getInput(id);
-		component.setOutputState(id, Signal.State.LOW);
-	}*/
+		component.setOutputState(id, Signal.State.HIGH);
+		assertEquals(Signal.State.HIGH, component.getOutput(id).getState());
+	}
 
 	protected abstract Component getInstance(String identifier);
 
