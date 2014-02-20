@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import se.openflisp.sls.Component;
+import se.openflisp.sls.event.CircuitEventDelegator;
 
 /**
  * A logical circuit of Components that can be placed in a 2D-grid.
@@ -34,6 +35,22 @@ public class Circuit2D extends Circuit {
 	 * Locations (x, y) for all Components in the Circuit.
 	 */
 	private Map<Component, Point> locations = new HashMap<Component, Point>();
+	
+	/**
+	 * Creates a Circuit with knowledge of its components locations.
+	 */
+	public Circuit2D() {
+		super();
+	}
+	
+	/**
+	 * Creates a Circuit with knowledge of its components locations.
+	 * 
+	 * @param delegator		the circuit event delegator
+	 */
+	public Circuit2D(CircuitEventDelegator delegator) {
+		super(delegator);
+	}
 	
 	/**
 	 * {@inheritDoc}
@@ -52,8 +69,9 @@ public class Circuit2D extends Circuit {
 	 * @param location		point where the component should be placed
 	 */
 	public void addComponent(Component component, Point location) {
-		if (this.locations.put(component, location) == null) {
+		if (this.getComponentLocation(component) == null) {
 			super.addComponent(component);
+			this.setComponentLocation(component, location);
 		}
 	}
 	
@@ -69,7 +87,8 @@ public class Circuit2D extends Circuit {
 		} else if (location == null) {
 			throw new IllegalArgumentException();
 		}
-		this.locations.put(component, location);
+		Point oldLocation = this.locations.put(component, location);
+		this.getEventDelegator().onComponentMoved(component, oldLocation, location);
 	}
 	
 	/**

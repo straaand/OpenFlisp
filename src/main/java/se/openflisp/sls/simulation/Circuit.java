@@ -24,6 +24,7 @@ import se.openflisp.sls.Component;
 import se.openflisp.sls.Input;
 import se.openflisp.sls.Output;
 import se.openflisp.sls.annotation.SourceComponent;
+import se.openflisp.sls.event.CircuitEventDelegator;
 import se.openflisp.sls.event.ComponentAdapter;
 import se.openflisp.sls.event.ComponentListener;
 import se.openflisp.sls.event.ListenerContext;
@@ -45,6 +46,39 @@ public class Circuit {
 	 * Thread that will evaluate the components if needed.
 	 */
 	private final CircuitSimulation simulationThread = new CircuitSimulation(this);
+	
+	/**
+	 * Delegates events that happens in the Circuit.
+	 */
+	private final CircuitEventDelegator delegator;
+	
+	/**
+	 * Constructs a new Circuit.
+	 */
+	public Circuit() {
+		this(new CircuitEventDelegator());
+	}
+	
+	/**
+	 * Constructs a new Circuit with a delegator.
+	 * 
+	 * @param delegator		the circuit event delegator
+	 */
+	public Circuit(CircuitEventDelegator delegator) {
+		if (delegator == null) {
+			throw new IllegalArgumentException("Delegator can not be null.");
+		}
+		this.delegator = delegator;
+	}
+	
+	/**
+	 * Gets the event delegator for the Component.
+	 * 
+	 * @return event delegator for the Component
+	 */
+	public CircuitEventDelegator getEventDelegator() {
+		return this.delegator;
+	}
 	
 	/**
 	 * Gets the Circuit simulation handler thread.
@@ -77,6 +111,7 @@ public class Circuit {
 					this.addComponent(input.getOwner());
 				}
 			}
+			this.getEventDelegator().onComponentAdded(component);
 		}
 	}
 	
