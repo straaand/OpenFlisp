@@ -42,6 +42,7 @@ public abstract class Gate extends Component {
 	 */
 	public Gate(String identifier) {
 		super(identifier);
+		this.getOutput();
 	}
 
 	/**
@@ -49,6 +50,7 @@ public abstract class Gate extends Component {
 	 */
 	public Gate(String identifier, ComponentEventDelegator delegator) {
 		super(identifier, delegator);
+		this.getOutput();
 	}
 	
 	/**
@@ -69,6 +71,20 @@ public abstract class Gate extends Component {
 	 * @return the evaluated signal for the given inputs
 	 */
 	protected abstract Signal.State evaluateOutput();
+	
+	/**
+	 * Initiate a number minimum number of inputs.
+	 * 
+	 * If the the Gate already have a number of inputs the method will
+	 * not create more than the specified amount.
+	 * 
+	 * @param inputCount		minimum amount of inputs that should be initiated
+	 */
+	public void initiateInputs(int inputCount) {
+		for (int inputID = 0; inputID < inputCount; inputID++) {
+			this.getInput(Integer.toString(inputID));
+		}
+	}
 	
 	/**
 	 * {@inheritDoc}
