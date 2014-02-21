@@ -78,12 +78,11 @@ public class CircuitSimulation extends Thread {
 				for (Component component : this.circuit.getSourceComponents()) {
 					component.evaluate();
 				}
-				while (this.inputQueue.poll(this.pollTime, TimeUnit.MILLISECONDS) != null) {
+				Input input = null;
+				while ((input = this.inputQueue.poll(this.pollTime, TimeUnit.MILLISECONDS)) != null) {
+					this.processInput(input);
 					while (!this.inputQueue.isEmpty()) {
-						Component component = this.inputQueue.poll().getOwner();
-						if (this.componentQueue.contains(component)) {
-							this.componentQueue.add(component);
-						}
+						this.processInput(this.inputQueue.poll());
 					}
 					while (!this.componentQueue.isEmpty()) {
 						this.componentQueue.poll().evaluate();
@@ -94,6 +93,18 @@ public class CircuitSimulation extends Thread {
 				break;
 			}
 		} while (!Thread.currentThread().isInterrupted());
+	}
+	
+	/**
+	 * Helper function to process input events.
+	 * 
+	 * @param input		input to be processed
+	 */
+	protected void processInput(Input input) {
+		Component component = input.getOwner();
+		if (!this.componentQueue.contains(component)) {
+			this.componentQueue.add(component);
+		}
 	}
 	
 	/**

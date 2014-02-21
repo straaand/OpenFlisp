@@ -18,21 +18,25 @@ package se.openflisp.sls.simulation;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import se.openflisp.sls.Component;
+import se.openflisp.sls.event.CircuitEventDelegator;
 
 public class CircuitTest {
 
 	public Circuit circuit;
-	
+	public CircuitEventDelegator delegator;
 	public Component component1, component2, component3;
 	
 	@Before
 	public void setup() {
-		circuit = new Circuit();
+		delegator = Mockito.mock(CircuitEventDelegator.class);
+		circuit = new Circuit(delegator);
 		component1 = mockComponent("1");
 		component2 = mockComponent("2");
 		component3 = mockComponent("3");
@@ -45,6 +49,11 @@ public class CircuitTest {
 			}
 		};
 		return component;
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testCreatingWithNullDelegator() {
+		new Circuit(null);
 	}
 	
 	@Test
@@ -105,5 +114,25 @@ public class CircuitTest {
 		component1.getOutput("1").connect(component2.getInput("2"));
 		component3.getOutput("1").connect(component1.getInput("2"));
 		assertThat(circuit.getComponents(), hasItems(component1, component2, component3));
+	}
+	
+	@Test
+	public void testDelegationSingleAddedComponent() {
+		circuit.addComponent(component1);
+		verify(delegator).onComponentAdded(component1);
+	}
+	
+	@Test
+	public void testDelegationConnectedComponent() {
+		component1.getOutput("1").connect(component2.getInput("2"));
+		circuit.addComponent(component1);
+		verify(delegator).onComponentAdded(component2);
+	}
+	
+	@Test
+	public void testDelegationConnectedComponentAfterAdd() {
+		circuit.addComponent(component1);
+		component1.getOutput("1").connect(component2.getInput("2"));
+		verify(delegator).onComponentAdded(component2);
 	}
 }

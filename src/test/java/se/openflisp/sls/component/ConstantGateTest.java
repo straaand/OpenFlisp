@@ -18,7 +18,6 @@ package se.openflisp.sls.component;
 
 import static org.junit.Assert.*;
 
-import org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import se.openflisp.sls.Signal;
@@ -48,12 +47,12 @@ public class ConstantGateTest extends GateTest {
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstantGateConstructor1() {
-		ConstantGate tempGate = new ConstantGate(id, null);
+		new ConstantGate(id, null);
 	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstantGateConstructor2() {
-		ConstantGate tempGate = new ConstantGate(id, null, delegator);
+		new ConstantGate(id, null, delegator);
 	}
 
 	@Test
