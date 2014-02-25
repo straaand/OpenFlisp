@@ -38,49 +38,39 @@ import se.openflisp.gui.swing.components.ComponentView;
 import se.openflisp.sls.component.NotGate;
 import se.openflisp.sls.component.*;
 
+
 /**	
- * A gateView will paint a gate
+ * A Viewier for gates
  * 
  * @author Daniel Svensson <daniel@dsit.se>
  * @version 1.0
  */
 @SuppressWarnings("serial")
 public class GateView extends ComponentView {
-
-	//JPanel for identifier, this is the main body of our component
+	
+	/**
+	 * In order to make the input and output panels transparent we need to put them in diffrent jpanels
+	 */
 	private JPanel identifierPanel;
-
-	// JLabel to fill identifierPanel
-	private JLabel	identifier;
-
-	// Panels to fill Input and Output signals
 	private JPanel	inputPanel;
 	private	 JPanel	outputPanel;
-
-	// Lists with Input and Output signals
+	private JLabel	identifier;
 	private List<OutputSignal>	outputSignals;
 	private List<InputSignal>	inputSignals;
 
-	/*
-	 * Creates a new GateView
-	 * @param	Component	The component to link with this view
+	/**
+	 * Creates a new gateview given a component
+	 * @param component		component to create a view for
 	 */
 	public GateView(Component component) {
 		super(component);
-
-		// Scale this Gate
 		setSize(new Dimension(componentSize,componentSize/2));
 		setLayout(new BorderLayout());
-
-		//Center JLabel
 		this.identifier = new JLabel("", JLabel.CENTER);
 		this.identifierPanel = new JPanel();
 		this.identifierPanel.setLayout(new FlowLayout());
-
-		//Add the JLabel to our IdentifierPanel
 		this.identifierPanel.add(identifier);
-
-		//Check instance and change identifier accordingly 
+		
 		if (component instanceof NotGate){
 			this.identifier.setText("=1");
 		}		
@@ -93,43 +83,34 @@ public class GateView extends ComponentView {
 		else if ( (component instanceof AndGate) || (component instanceof NandGate) ) {
 			this.identifier.setText("&");
 		}
-
-		this.identifierPanel.setOpaque(true);
-
-		// Make a black border around the gate
-		this.identifierPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		this.identifierPanel.setBackground(Color.WHITE);
-		this.identifierPanel.setMaximumSize(new Dimension(componentSize/2 , componentSize));
-
-		// Instansiate the lists
+		
+		this.identifier.setOpaque(true);
+		this.identifier.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.identifier.setBackground(Color.WHITE);
+		this.identifier.setMaximumSize(new Dimension(componentSize/2 , componentSize));
+		
+		
 		this.inputSignals = new ArrayList<InputSignal>();
 		this.outputSignals = new ArrayList<OutputSignal>();
-
-		/*
-		 * Instantiate Input- and Output- panels, create a BoxLayout in order to place signals
-		 * in center of Y-axis
-		 */
+		
 		this.inputPanel = new JPanel();
 		this.inputPanel.setLayout(new BoxLayout(this.inputPanel, BoxLayout.Y_AXIS));
-
+		
 		this.outputPanel = new JPanel();
 		this.outputPanel.setLayout(new BoxLayout(this.outputPanel, BoxLayout.Y_AXIS));
-
+		
 		this.inputPanel.setPreferredSize(new Dimension(componentSize/4, componentSize/2));
 		this.outputPanel.setPreferredSize(new Dimension(componentSize/4,componentSize/2));
-
-		// Add outputs
+		
 		for(Output output : component.getOutputs()) {
 			OutputSignal out = new OutputSignal(output);
 			this.outputSignals.add(out);
-
-			// Vertical glue will make the component center in Y-AXIS
 			this.outputPanel.add( Box.createVerticalGlue() );
 			out.setMaximumSize(new Dimension(componentSize/4,componentSize/5));
 			this.outputPanel.add(out);
 			this.outputPanel.add( Box.createVerticalGlue() );
 		}
-
+		
 		for(Input input : component.getInputs()) {
 			InputSignal in = new InputSignal(input);
 			this.inputSignals.add(in);
@@ -138,18 +119,21 @@ public class GateView extends ComponentView {
 			this.inputPanel.add(in);
 			this.inputPanel.add( Box.createVerticalGlue() );
 		}
-
-		//Make Input- and Output- opaque
+		
+		
+		this.outputPanel.setBorder(new LineBorder(Color.BLACK));
 		this.inputPanel.setOpaque(false);
+		this.inputPanel.setBorder(new LineBorder(Color.BLACK));
 		this.outputPanel.setOpaque(false);
-
-		//Add all panels
+		
+		
 		add(inputPanel, BorderLayout.WEST);
 		add(identifier, BorderLayout.CENTER);
 		add(outputPanel, BorderLayout.EAST);
 	}
+
 	/**
-	 * Add a new signal to our GateVie
+	 * Add additional signal to this gate
 	 * @param signal
 	 */
 	public void addSignal(Signal signal) {
