@@ -82,10 +82,10 @@ public class Circuit2D extends Circuit {
 	 * @param location		location to move the component to
 	 */
 	public void setComponentLocation(Component component, Point location) {
-		if (!this.contains(component)) {
-			throw new IllegalArgumentException();
+		if (component == null || !this.contains(component)) {
+			throw new IllegalArgumentException("Can't set position of a component that doesn't exist");
 		} else if (location == null) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Can't set position to null");
 		}
 		Point oldLocation = this.locations.put(component, location);
 		this.getEventDelegator().onComponentMoved(component, oldLocation, location);
