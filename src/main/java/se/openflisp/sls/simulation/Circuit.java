@@ -19,6 +19,7 @@ package se.openflisp.sls.simulation;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import se.openflisp.sls.Component;
 import se.openflisp.sls.Input;
@@ -40,7 +41,7 @@ public class Circuit {
 	/**
 	 * Set of components that the circuit contains.
 	 */
-	private Set<Component> components = new HashSet<Component>();
+	private Set<Component> components = Collections.newSetFromMap(new ConcurrentHashMap<Component, Boolean>());
 	
 	/**
 	 * Thread that will evaluate the components if needed.

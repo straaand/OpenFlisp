@@ -16,6 +16,8 @@
  */
 package se.openflisp.gui.perspectives;
 
+import se.openflisp.gui.swing.components.ComponentPanel;
+import se.openflisp.gui.swing.components.SimulationBoard;
 import bibliothek.gui.DockTheme;
 import bibliothek.gui.dock.DefaultDockable;
 
@@ -37,8 +39,8 @@ public class SlsPerspective extends Perspective {
 		this.identifier = "Sequential Logical simulation";
 		
 		//Set grid
-		dockGrid.addDockable(0, 0, 2, 1, new DefaultDockable("Komponenter"));
-		dockGrid.addDockable(0, 0, 1 ,1, new DefaultDockable("Kopplingsarea"));
+		dockGrid.addDockable(0, 0, 2, 1, new DefaultDockable(new SimulationBoard()));
+		dockGrid.addDockable(0, 0, 1 ,1, new DefaultDockable(new ComponentPanel()));
 		station.dropTree( dockGrid.toTree());
 	}
 }

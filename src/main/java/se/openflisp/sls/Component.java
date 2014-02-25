@@ -20,8 +20,8 @@ import se.openflisp.sls.event.ComponentEventDelegator;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Basic model class for a Component in a Sequential Logical Circuit.
@@ -44,12 +44,12 @@ public abstract class Component {
 	/**
 	 * Map of the components inputs mapped to its pin identifiers.
 	 */
-	private Map<String, Input> inputs = new HashMap<String, Input>();
+	private Map<String, Input> inputs = new ConcurrentHashMap<String, Input>();
 	
 	/**
 	 * Map of the components outputs mapped to its pin identifiers.
 	 */
-	private Map<String, Output> outputs = new HashMap<String, Output>();
+	private Map<String, Output> outputs = new ConcurrentHashMap<String, Output>();
 	
 	/**
 	 * Constructs a new Component with a identifier.
