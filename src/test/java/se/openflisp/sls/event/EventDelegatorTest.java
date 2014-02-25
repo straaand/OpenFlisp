@@ -18,17 +18,29 @@ package se.openflisp.sls.event;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import java.util.List;
+import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import se.openflisp.sls.Component;
+import se.openflisp.sls.Input;
+import se.openflisp.sls.Output;
+import se.openflisp.sls.Signal;
 
 public abstract class EventDelegatorTest<T> {
 	
 	public EventDelegator<T> eventDelegator;
 	public T listener;
+	public Component component;
+	public Signal signal;
+	public Input input;
+	public Output output;
+	private List<T> listeners;
+	private static final int NR_OF_DEFAULT_LISTENERS = 9;
+	private static final int NR_OF_SWING_LISTENERS = 3;
+	private static final int NR_OF_MODEL_LISTENERS = 7;
 
 	@Before
 	public void setup() {
@@ -167,6 +179,58 @@ public abstract class EventDelegatorTest<T> {
 		assertThat(eventDelegator.getSwingListeners().size(), is(0));
 	}
 
+	@Test
+	public void testAddListeners() {
+		EventDelegator delegator = getDelegatorInstance();
+		addListeners(delegator, getListenerClass());
+		assertThat(delegator.getModelListeners().size(), is(NR_OF_MODEL_LISTENERS));
+		assertThat(delegator.getSwingListeners().size(), is(NR_OF_SWING_LISTENERS));
+		assertThat(delegator.getNormalListeners().size(), is(NR_OF_DEFAULT_LISTENERS));
+	}
+
 	public abstract EventDelegator<T> getDelegatorInstance();
 	public abstract Class<T> getListenerClass();
+
+	/**
+	 * Creates an anonymous class.
+	 * Used for testing that listener methods
+	 * are run in correct thread. Swing listener's methods should
+	 * run in Event Dispatch Thread and the other should not.
+	 *
+	 * @param isSwingListener boolean to indicate that the listener
+	 * should be a swing listener.
+	 */
+	 public abstract T createListener(boolean isSwingListener);
+
+	/**
+	 * Adds listeners to a delegator.
+	 * Uses Constants NR_OF_DEFAULT_LISTENERS,
+	 * NR_OF_SWING_LISTENERS and NR_OF_MODEL_LISTENERS
+	 */
+	public void addListeners(EventDelegator delegator, Class<T> listenerClass) {
+		listeners = new ArrayList<T>();
+		T tempListener;
+
+		int nrOfListeners = NR_OF_DEFAULT_LISTENERS
+			+ NR_OF_SWING_LISTENERS
+			+ NR_OF_MODEL_LISTENERS;
+
+		for(int i = 0; i < nrOfListeners; i++) {
+			tempListener = Mockito.mock(listenerClass);
+			listeners.add(tempListener);
+		}
+		
+		int i = 0;
+		for(T l : listeners) {
+			if (i < NR_OF_DEFAULT_LISTENERS) {
+				delegator.addListener(ListenerContext.DEFAULT, listeners.get(i));
+			} else if (i < NR_OF_DEFAULT_LISTENERS + NR_OF_SWING_LISTENERS) {
+				delegator.addListener(ListenerContext.SWING, listeners.get(i));
+			} else {
+				delegator.addListener(ListenerContext.MODEL, listeners.get(i));
+			}
+			i++;
+		}
+	}
+
 }
