@@ -55,6 +55,13 @@ public abstract class EventDelegatorTest<T> {
 	}
 
 	@Test
+	public void testGettingSameListenerList_DEFAULT() {
+		eventDelegator.addListener(ListenerContext.DEFAULT, listener);
+		eventDelegator.addListener(ListenerContext.DEFAULT, listener);
+		assertEquals(eventDelegator.getNormalListeners(), eventDelegator.getNormalListeners());
+	}
+
+	@Test
 	public void testGettingSameListeners_MODEL() {
 		assertTrue(eventDelegator.addListener(ListenerContext.MODEL, listener));
 		assertSame(listener, eventDelegator.getModelListeners().get(0));
