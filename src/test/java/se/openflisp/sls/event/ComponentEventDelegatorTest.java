@@ -35,6 +35,8 @@ public class ComponentEventDelegatorTest extends EventDelegatorTest<ComponentLis
 	
 	private Component component;
 	private Signal signal;
+	private Input input;
+	private Output output;
 	private ComponentEventDelegator delegator;
 	private List<ComponentListener> listeners;
 	private static final int NR_OF_DEFAULT_LISTENERS = 9;
@@ -57,14 +59,16 @@ public class ComponentEventDelegatorTest extends EventDelegatorTest<ComponentLis
 		super.setup();
 		component = Mockito.mock(Component.class);
 		signal = Mockito.mock(Signal.class);
+		input = Mockito.mock(Input.class);
+		output = Mockito.mock(Output.class);
 		delegator = new ComponentEventDelegator();
 	}
 
 	@Test
 	public void testOnSignalChange() {
 		for(int i = 0; i < 10; i++) {
-			component = Mockito.mock(Component.class);
-			addListenersToList();
+			delegator = new ComponentEventDelegator();
+			addListeners();
 			delegator.onSignalChange(component, signal);
 
 			for(ComponentListener l : delegator.getModelListeners()) {
@@ -73,8 +77,46 @@ public class ComponentEventDelegatorTest extends EventDelegatorTest<ComponentLis
 			for(ComponentListener l : delegator.getSwingListeners()) {
 				verify(l, Mockito.timeout(1000)).onSignalChange(component, signal);
 			}
-			for(ComponentListener l: delegator.getNormalListeners()) {
+			for(ComponentListener l : delegator.getNormalListeners()) {
 				verify(l).onSignalChange(component, signal);
+			}
+		}
+	}
+
+	@Test
+	public void testOnSignalConnection() {
+		for(int i = 0; i < 10; i++) {
+			delegator = new ComponentEventDelegator();
+			addListeners();
+			delegator.onSignalConnection(input, output);
+
+			for(ComponentListener l : delegator.getModelListeners()) {
+				verify(l).onSignalConnection(input, output);
+			}
+			for(ComponentListener l : delegator.getSwingListeners()) {
+				verify(l, Mockito.timeout(1000)).onSignalConnection(input, output);
+			}
+			for(ComponentListener l : delegator.getNormalListeners()) {
+				verify(l).onSignalConnection(input, output);
+			}
+		}
+	}
+
+	@Test
+	public void testOnSignalDisconnection() {
+		for(int i = 0; i < 10; i++) {
+			delegator = new ComponentEventDelegator();
+			addListeners();
+			delegator.onSignalDisconnection(input, output);
+
+			for(ComponentListener l : delegator.getModelListeners()) {
+				verify(l).onSignalDisconnection(input, output);
+			}
+			for(ComponentListener l : delegator.getSwingListeners()) {
+				verify(l, Mockito.timeout(1000)).onSignalDisconnection(input, output);
+			}
+			for(ComponentListener l : delegator.getNormalListeners()) {
+				verify(l).onSignalDisconnection(input, output);
 			}
 		}
 	}
@@ -101,8 +143,8 @@ public class ComponentEventDelegatorTest extends EventDelegatorTest<ComponentLis
 	}
 
 	@Test
-	public void testAddListenersToList() {
-		addListenersToList();
+	public void testAddListeners() {
+		addListeners();
 		assertThat(delegator.getModelListeners().size(), is(NR_OF_MODEL_LISTENERS));
 		assertThat(delegator.getSwingListeners().size(), is(NR_OF_SWING_LISTENERS));
 		assertThat(delegator.getNormalListeners().size(), is(NR_OF_DEFAULT_LISTENERS));
@@ -141,7 +183,7 @@ public class ComponentEventDelegatorTest extends EventDelegatorTest<ComponentLis
 		};
 	}
 
-	private void addListenersToList() {
+	private void addListeners() {
 		listeners = new ArrayList<ComponentListener>();
 		ComponentListener componentListener;
 
