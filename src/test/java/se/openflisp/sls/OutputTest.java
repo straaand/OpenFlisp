@@ -190,6 +190,7 @@ public class OutputTest extends SignalTest {
 		verify(input1).setState(Signal.State.HIGH);
 	}
 	
+	@Test
 	public void testDisconnectSetsInputFloating() {
 		instance.setState(Signal.State.HIGH);
 		instance.connect(input1);
