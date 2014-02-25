@@ -16,31 +16,21 @@
  */
 package se.openflisp.sls.event;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.awt.Point;
-import java.util.List;
 import javax.swing.SwingUtilities;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import se.openflisp.sls.Component;
 import se.openflisp.sls.Signal;
-import se.openflisp.sls.Input;
-import se.openflisp.sls.Output;
 
 public class CircuitEventDelegatorTest extends EventDelegatorTest<CircuitListener> {
 
-	private Component component;
-	private Signal signal;
 	private CircuitEventDelegator delegator;
-	private List<CircuitListener> listeners;
 	private Point point;
-	private static final int NR_OF_DEFAULT_LISTENERS = 9;
-	private static final int NR_OF_SWING_LISTENERS = 3;
-	private static final int NR_OF_MODEL_LISTENERS = 7;
 
 	@Override
 	public CircuitEventDelegator getDelegatorInstance() {
