@@ -18,13 +18,6 @@ package se.openflisp.gui.swing.components;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
-import java.io.Serializable;
-
-
 
 import javax.swing.JButton;
 
