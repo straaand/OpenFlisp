@@ -58,7 +58,7 @@ public class Output extends Signal {
 	@Override
 	protected void setState(Signal.State state) {
 		super.setState(state);
-		for (Input input : this.connections) {
+		for (Input input : this.getConnections()) {
 			input.setState(state);
 		}
 	}
