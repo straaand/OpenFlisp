@@ -17,8 +17,8 @@
 package se.openflisp.sls;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Model of a signal Output to a Component.
@@ -34,7 +34,7 @@ public class Output extends Signal {
 	/**
 	 * One-to-many relationship between Output and Inputs.
 	 */
-	private Set<Input> connections = new HashSet<Input>();
+	private Set<Input> connections = Collections.newSetFromMap(new ConcurrentHashMap<Input, Boolean>());
 	
 	/**
 	 * {@inheritDoc}
