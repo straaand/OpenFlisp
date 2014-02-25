@@ -21,7 +21,7 @@ import se.openflisp.sls.component.AndGate;
 import se.openflisp.sls.component.NotGate;
 
 /**	
- * Will create a ComponentView 
+ * A Factory for creating ComponentViews 
  * 
  * @author Daniel Svensson <daniel@dsit.se>
  * @version 1.0
