@@ -30,13 +30,12 @@ import se.openflisp.sls.component.*;
  */
 public class SingleOrGateSimTest extends SingleGateSimTest {
 	private OrGate orGate;
-	private String orGateID;
 
 	@Before
 	public void setup() {
 		super.setup();
-		orGateID = "OrGate";
-		orGate = new OrGate(orGateID);
+		gateID = "OrGate";
+		orGate = new OrGate(gateID);
 	}
 	
 	/* LOW OUTPUT */

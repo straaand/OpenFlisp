@@ -30,13 +30,12 @@ import se.openflisp.sls.*;
 public class SingleAndGateSimTest extends SingleGateSimTest {
 	
 	private AndGate andGate;
-	private String andGateID;
 
 	@Before
 	public void setup() {
 		super.setup();
-		andGateID = "AndGate";
-		andGate = new AndGate(andGateID);
+		gateID = "AndGate";
+		andGate = new AndGate(gateID);
 	}
 	
 	/* LOW OUTPUT */

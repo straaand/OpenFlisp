@@ -30,13 +30,12 @@ import se.openflisp.sls.component.*;
  */
 public class SingleNandGateSimTest extends SingleGateSimTest {
 	private NandGate nandGate;
-	private String nandGateID;
 	
 	@Before
 	public void setup() {
 		super.setup();
-		nandGateID = "NandGate";
-		nandGate = new NandGate(nandGateID);
+		gateID = "NandGate";
+		nandGate = new NandGate(gateID);
 	}
 
 	/* LOW OUTPUT */

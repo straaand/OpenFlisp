@@ -16,28 +16,32 @@
  */
 package se.openflisp.sls.simulation.integration;
 
-import org.junit.After;
-import org.junit.Before;
-
-import se.openflisp.sls.simulation.Circuit;
+import se.openflisp.sls.Component;
+import se.openflisp.sls.Signal;
+import se.openflisp.sls.event.ComponentAdapter;
 
 /**
- * Abstract class for simulation test classes to extend.
- * 
+ * Listener used for simulation tests of components.
  * @author Pär Svedberg <rockkuf@gmail.com>
  * @version 1.0
+ *
  */
-public abstract class SimulationTest {
-	public Circuit circuit;
+public class ComponentSimListener extends ComponentAdapter {
+	private boolean outputChanged = false;
+	private int changedCounter = 0;
 	
-	@Before
-	public void setup() {
-		circuit = new Circuit();
-		circuit.getSimulation().start();
+	@Override
+	public void onSignalChange(Component component, Signal signal) {
+			this.outputChanged = true;
+			changedCounter++;
 	}
 	
-	@After
-	public void stopSim() {
-		circuit.getSimulation().interrupt();
+	public boolean isOutputChanged() {
+		return outputChanged;
 	}
+	
+	public int changedTimes() {
+		return changedCounter;
+	}
+
 }

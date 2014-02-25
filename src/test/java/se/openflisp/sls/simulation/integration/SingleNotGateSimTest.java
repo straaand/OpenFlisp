@@ -30,13 +30,12 @@ import se.openflisp.sls.component.*;
  */
 public class SingleNotGateSimTest extends SingleGateSimTest {
 	private NotGate notGate;
-	private String notGateID;
 	
 	@Before
 	public void setup() {
 		super.setup();
-		notGateID = "NotGate";
-		notGate = new NotGate(notGateID);
+		gateID = "NotGate";
+		notGate = new NotGate(gateID);
 	}
 	
 	/* LOW OUTPUT */
