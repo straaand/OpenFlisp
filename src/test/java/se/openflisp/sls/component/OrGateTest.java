@@ -16,17 +16,10 @@
  */
 package se.openflisp.sls.component;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
 import se.openflisp.sls.Signal;
 import se.openflisp.sls.event.ComponentEventDelegator;
-import org.junit.Test;
-import org.junit.Before;
 
 public class OrGateTest extends GateTest {
-
-	private Gate orGate;
 
 	@Override
 	protected Gate getInstance(String identifier) {
@@ -37,100 +30,24 @@ public class OrGateTest extends GateTest {
 	protected Gate getInstance(String identifier, ComponentEventDelegator delegator) {
 		return new OrGate(identifier, delegator);
 	}
-
-	@Before
-	public void before() {
-		super.setup();
-		orGate = new OrGate(gateName);
-	}
-
-	/* HIGH INPUT */
-
-	@Test
-	public void testEvaluatingOutput_OneHIGHInput() {
-		Signal.State[] state = {Signal.State.HIGH};
-		helpEvaluatingOutput(state, Signal.State.FLOATING, orGate);
-	}
-
-	@Test
-	public void testEvaluatingOutputHIGH_TwoInputs() {
-		Signal.State[] states = {Signal.State.HIGH, Signal.State.HIGH};
-		helpEvaluatingOutput(states, Signal.State.HIGH, orGate);
-	}
-
-	/* LOW INPUT */
-
-	@Test
-	public void testEvaluatingOutput_OneLOWInput() {
-		Signal.State[] state = {Signal.State.LOW};
-		helpEvaluatingOutput(state, Signal.State.FLOATING, orGate);
-	}
-
-	@Test
-	public void testEvaluatingOutputLOW_TwoInputs() {
-		Signal.State[] states = {Signal.State.LOW, Signal.State.LOW};
-		helpEvaluatingOutput(states, Signal.State.LOW, orGate);
-	}
-
-	/* FLOATING INPUT */
-
-	@Test
-	public void testEvaluatingOutput_OneFLOATINGInput() {
-		Signal.State[] state = {Signal.State.FLOATING};
-		helpEvaluatingOutput(state, Signal.State.FLOATING, orGate);
-	}
-
-	@Test
-	public void testEvaluatingOutputFLOATING_TwoInputs() {
-		Signal.State[] states = {Signal.State.FLOATING, Signal.State.FLOATING};
-		helpEvaluatingOutput(states, Signal.State.FLOATING, orGate);
-	}
-
-	@Test
-	public void testEvaluatingOutputFLOATING_noInput() {
-		assertThat(orGate.getInputs().size(), is(0));
-		assertEquals(Signal.State.FLOATING, orGate.evaluateOutput());
-		assertThat(orGate.getInputs().size(), is(0));
-	}
-
-	/* VARIABLE INPUT - HIGH OUTPUT */
-
-	@Test
-	public void testEvaluatingOutputHIGHandLOW() {
-		Signal.State[] states = {Signal.State.HIGH, Signal.State.LOW};
-		helpEvaluatingOutput(states, Signal.State.HIGH, orGate);
-	}
 	
-	@Test
-	public void testEvaluatingOutputLOWandHigh() {
-		Signal.State[] states = {Signal.State.LOW, Signal.State.HIGH};
-		helpEvaluatingOutput(states, Signal.State.HIGH, orGate);
+	@Override
+	public TruthTable generateTruthTable() {
+		TruthTable table = new TruthTable();
+		table.add(SignalConfiguration.ONE_HIGH, Signal.State.FLOATING);
+		table.add(SignalConfiguration.TWO_HIGH, Signal.State.HIGH);
+		table.add(SignalConfiguration.ONE_LOW, Signal.State.FLOATING);
+		table.add(SignalConfiguration.ONE_HIGH, Signal.State.FLOATING);
+		table.add(SignalConfiguration.TWO_LOW, Signal.State.LOW);
+		table.add(SignalConfiguration.ONE_FLOATING, Signal.State.FLOATING);
+		table.add(SignalConfiguration.TWO_FLOATING, Signal.State.FLOATING);
+		table.add(SignalConfiguration.NO_SIGNALS, Signal.State.FLOATING);
+		table.add(SignalConfiguration.HIGH_AND_LOW, Signal.State.HIGH);
+		table.add(SignalConfiguration.LOW_AND_HIGH, Signal.State.HIGH);
+		table.add(SignalConfiguration.HIGH_AND_FLOATING, Signal.State.HIGH);
+		table.add(SignalConfiguration.FLOATING_AND_HIGH, Signal.State.HIGH);
+		table.add(SignalConfiguration.LOW_AND_FLOATING, Signal.State.FLOATING);
+		table.add(SignalConfiguration.FLOATING_AND_LOW, Signal.State.FLOATING);
+		return table;
 	}
-	
-	@Test
-	public void testEvaluatingOutputHIGHandFLOATING() {
-		Signal.State[] states = {Signal.State.HIGH, Signal.State.FLOATING};
-		helpEvaluatingOutput(states, Signal.State.HIGH, orGate);
-	}
-
-	@Test
-	public void testEvaluatingOutputFLOATINGandHIGH() {
-		Signal.State[] states = {Signal.State.FLOATING, Signal.State.HIGH};
-		helpEvaluatingOutput(states, Signal.State.HIGH, orGate);
-	}
-
-	/* VARIABLE INPUT - FLOATING OUTPUT */
-
-	@Test
-	public void testEvaluatingOutputLOWandFLOATING() {
-		Signal.State[] states = {Signal.State.LOW, Signal.State.FLOATING};
-		helpEvaluatingOutput(states, Signal.State.FLOATING, orGate);
-	}
-
-	@Test
-	public void testEvaluatingOutputFLOATINGandLOW() {
-		Signal.State[] states = {Signal.State.FLOATING, Signal.State.LOW};
-		helpEvaluatingOutput(states, Signal.State.FLOATING, orGate);
-	}
-
 }

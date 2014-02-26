@@ -1,104 +1,136 @@
-/*
- * Copyright (C) 2014- See AUTHORS file.
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package se.openflisp.sls.component;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
-import org.junit.Before;
-import org.junit.Test;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import se.openflisp.sls.ComponentTest;
-import se.openflisp.sls.Component;
-import se.openflisp.sls.Input;
-import se.openflisp.sls.Output;
-import se.openflisp.sls.Signal;
-import se.openflisp.sls.event.ComponentEventDelegator;
+import java.util.Set;
+
+import org.junit.Test;
 import org.mockito.Mockito;
 
+import se.openflisp.sls.Component;
+import se.openflisp.sls.ComponentTest;
+import se.openflisp.sls.Input;
+import se.openflisp.sls.Signal;
+
 public abstract class GateTest extends ComponentTest {
-
-	public Gate gate;
-	public String gateName = "Test Gate 1"; // For classes extending GateTest
-
-	@Before
-	public void setup() {
-		super.setup();
-		gate = getInstance(id);
+	
+	public enum SignalConfiguration {
+		NO_SIGNALS(new Signal.State[] {}),
+		
+		ONE_FLOATING(new Signal.State[] {Signal.State.FLOATING}),
+		ONE_HIGH(new Signal.State[] {Signal.State.HIGH}),
+		ONE_LOW(new Signal.State[] {Signal.State.LOW}),
+		
+		TWO_FLOATING(new Signal.State[] {Signal.State.FLOATING, Signal.State.FLOATING}),
+		TWO_HIGH(new Signal.State[] {Signal.State.HIGH, Signal.State.HIGH}),
+		TWO_LOW(new Signal.State[] {Signal.State.LOW, Signal.State.LOW}),
+		
+		THREE_FLOATING(new Signal.State[] {Signal.State.FLOATING, Signal.State.FLOATING, Signal.State.FLOATING}),
+		THREE_HIGH(new Signal.State[] {Signal.State.HIGH, Signal.State.HIGH, Signal.State.HIGH}),
+		THREE_LOW(new Signal.State[] {Signal.State.LOW, Signal.State.LOW, Signal.State.LOW}),
+		
+		HIGH_AND_LOW(new Signal.State[] {Signal.State.HIGH, Signal.State.LOW}),
+		LOW_AND_HIGH(new Signal.State[] {Signal.State.LOW, Signal.State.HIGH}),
+		HIGH_AND_FLOATING(new Signal.State[] {Signal.State.HIGH, Signal.State.FLOATING}),
+		FLOATING_AND_HIGH(new Signal.State[] {Signal.State.FLOATING, Signal.State.HIGH}),
+		LOW_AND_FLOATING(new Signal.State[] {Signal.State.LOW, Signal.State.FLOATING}),
+		FLOATING_AND_LOW(new Signal.State[] {Signal.State.FLOATING, Signal.State.LOW}),
+		FLOATING_LOW_HIGH(new Signal.State[] {Signal.State.FLOATING, Signal.State.LOW, Signal.State.HIGH}),
+		LOW_HIGH_FLOATING(new Signal.State[] {Signal.State.LOW, Signal.State.HIGH, Signal.State.FLOATING}),
+		HIGH_FLOATING_LOW(new Signal.State[] {Signal.State.HIGH, Signal.State.FLOATING, Signal.State.LOW});
+		
+		public final Signal.State[] signals;
+		
+		private SignalConfiguration(Signal.State[] signals) {
+			this.signals = signals;
+		}
 	}
 
+	public abstract TruthTable generateTruthTable();
+	
 	@Test
-	public void testGettingOutput() {
-		Output output = gate.getOutput();
-		assertEquals(Gate.OUTPUT, output.getIdentifier());
+	public void testTruthTable() {
+		TruthTable table = this.generateTruthTable();
+		for (TruthTableCase ttCase : table.getCases()) {
+			Gate gate = (Gate) this.getInstance("gate");
+			ttCase.addConnectInputs(gate);
+			assertEquals(ttCase.debugMessage, ttCase.output, gate.evaluateOutput());
+		}
 	}
 	
-	@Override
-	protected abstract Gate getInstance(String identifier);
-
-	@Override
-	protected abstract Gate getInstance(String identifier, ComponentEventDelegator delegator);
-
-	/**
-	 * Function to help evaluate output for a gate
-	 * 
-	 * @inputStates array with states that gate should have
-	 * @expectedOutput the output that the gate is expected to give when evaluated
-	 * @gateToEvaluate the gate to test evaluation on
-	 */
-	public void helpEvaluatingOutput(Signal.State[] inputStates, Signal.State expectedOutput, Gate gateToEvaluate) {
-		Map<Input, Signal.State> inputMocks = new HashMap<Input, Signal.State>();
-		for(Signal.State state : inputStates) {
-			inputMocks.put(Mockito.mock(Input.class), state);
+	public class TruthTableCase {
+		
+		private Map<String, Input> inputs = new HashMap<String, Input>();
+		
+		public final Signal.State[] signals;
+		
+		public final Signal.State output;
+		
+		public final String debugMessage;
+		
+		public TruthTableCase(Signal.State[] inputs, Signal.State output, String debugMessage) {
+			this.signals = inputs;
+			this.output = output;
+			this.debugMessage = debugMessage;
+			for (int inputID = 0; inputID < inputs.length; inputID++) {
+				Input input = Mockito.mock(Input.class);
+				doReturn(inputs[inputID]).when(input).getState();
+				doReturn(Integer.toString(inputID)).when(input).getIdentifier();
+				this.inputs.put(
+					Integer.toString(inputID), 
+					input
+				);
+			}
 		}
-		Gate gateWithNewInputs = addInputMockToInputs(inputMocks, gateToEvaluate);
-		assertThat(gateWithNewInputs.getInputs().size(), is(inputStates.length));
-		assertEquals(expectedOutput, gateWithNewInputs.evaluateOutput());
+		
+		public void addConnectInputs(Gate gate) {
+			try {
+				Field field = Component.class.getDeclaredField("inputs");
+				field.setAccessible(true);
+				field.set(gate, inputs);
+			} catch (Exception e) {}
+		}
 	}
-
-	/**
-	 * Function to help add mocked inputs
-	 * 
-	 * @inputMocks map with mocked inputs and what state the input should have
-	 * @gateToChangeInputsOn the gate to change inputs on
-	 */
-	public Gate addInputMockToInputs(Map<Input, Signal.State> inputMocks, Gate gateToChangeInputsOn) {
-		Map<String, Input> newMap = new HashMap<String, Input>();
-
-		int	i = 0; 
-		for(Map.Entry<Input, Signal.State> entry : inputMocks.entrySet()) {
-			Input tempMock = entry.getKey();
-			Mockito.when(tempMock.getState()).thenReturn(entry.getValue());
-			newMap.put("identifier " + i, tempMock);
-			i++;
+	
+	public class TruthTable  {
+		
+		private Set<TruthTableCase> cases = new HashSet<TruthTableCase>();
+		
+		public TruthTable invert() {
+			TruthTable invertedTable = new TruthTable();
+			for (TruthTableCase ttCase : this.cases) {
+				Signal.State invertedOutput;
+				if (ttCase.output == Signal.State.LOW) {
+					invertedOutput = Signal.State.HIGH;
+				} else if (ttCase.output == Signal.State.HIGH) {
+					invertedOutput = Signal.State.LOW;
+				} else {
+					invertedOutput = ttCase.output;
+				}
+				invertedTable.add(ttCase.signals, invertedOutput, ttCase.debugMessage);
+			}
+			return invertedTable;
 		}
-
-		try {
-			Field field = Component.class.getDeclaredField("inputs");
-			field.setAccessible(true);
-			field.set(gateToChangeInputsOn, newMap);
-		} catch (NoSuchFieldException e) {
-			System.out.println(e.getMessage());
-		} catch (IllegalAccessException e) {
-			System.out.println(e.getMessage());
+		
+		public void add(Signal.State[] inputs, Signal.State output, String debugMessage) {
+			this.cases.add(new TruthTableCase(inputs, output, debugMessage));
 		}
-		return gateToChangeInputsOn;
+		
+		public void add(SignalConfiguration config, Signal.State output, String debugMessage) {
+			this.add(config.signals, output, debugMessage);
+		}
+		
+		public void add(SignalConfiguration config, Signal.State output) {
+			this.add(config.signals, output, String.format("%s", config));
+		}
+		
+		public Set<TruthTableCase> getCases() {
+			return this.cases;
+		}
 	}
-
 }

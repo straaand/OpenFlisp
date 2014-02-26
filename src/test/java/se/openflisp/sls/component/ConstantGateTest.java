@@ -44,6 +44,11 @@ public class ConstantGateTest extends GateTest {
 		super.setup();
 		delegator = new ComponentEventDelegator();
 	}
+	
+	@Override
+	public TruthTable generateTruthTable() {
+		return new TruthTable();
+	}
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testConstantGateConstructor1() {
@@ -75,5 +80,4 @@ public class ConstantGateTest extends GateTest {
 		assertEquals(Signal.State.FLOATING, constantGate.getConstantState());
 		assertEquals(Signal.State.FLOATING, constantGate.evaluateOutput());
 	}
-
 }

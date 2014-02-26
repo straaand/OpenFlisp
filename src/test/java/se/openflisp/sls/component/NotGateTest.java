@@ -16,23 +16,10 @@
  */
 package se.openflisp.sls.component;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import se.openflisp.sls.Input;
 import se.openflisp.sls.Signal;
-import se.openflisp.sls.Component;
 import se.openflisp.sls.event.ComponentEventDelegator;
-import org.junit.Test;
-import org.junit.Before;
-import org.mockito.Mockito;
 
 public class NotGateTest extends GateTest {
-
-	private Gate notGate;
 
 	@Override
 	protected Gate getInstance(String identifier) {
@@ -44,87 +31,16 @@ public class NotGateTest extends GateTest {
 		return new NotGate(identifier, delegator);
 	}
 
-	@Before
-	public void before() {
-		super.setup();
-		notGate = new NotGate(gateName);
-	}
-
-	@Test
-	public void testEvaluatingOutputHIGH() {
-		addInputMock1ToInputs(Signal.State.LOW);
-		assertEquals(Signal.State.HIGH, notGate.evaluateOutput());
-	}
-
-	@Test
-	public void testEvaluatingOutputLOW() {
-		addInputMock1ToInputs(Signal.State.HIGH);
-		assertEquals(Signal.State.LOW, notGate.evaluateOutput());
-	}
-
-	@Test
-	public void testEvaluatingOutputFLOATING() {
-		addInputMock1ToInputs(Signal.State.FLOATING);
-		assertEquals(Signal.State.FLOATING, notGate.evaluateOutput());
-	}
-
-	@Test
-	public void testWithMoreThanOneInput() {
-		Mockito.when(inputMock1.getState()).thenReturn(Signal.State.LOW);
-		Input inputMock2 = Mockito.mock(Input.class);
-		Mockito.when(inputMock2.getState()).thenReturn(Signal.State.LOW);
-		
-		Map<String, Input> hashMap = new HashMap<String, Input>();
-		hashMap.put(id,inputMock1);
-		hashMap.put("identifier2",inputMock2);
-		try {
-			Field field = Component.class.getDeclaredField("inputs");
-			field.setAccessible(true);
-			field.set(notGate, hashMap);
-		} catch (NoSuchFieldException e) {
-			System.out.println(e.getMessage());
-		} catch (IllegalAccessException e) {
-			System.out.println(e.getMessage());
-		}
-		assertThat(notGate.getInputs().size(), is(2));
-		assertEquals(Signal.State.FLOATING, notGate.evaluateOutput());
-	}
-
-	@Test
-	public void testWithNoInput() {
-		assertThat(notGate.getInputs().size(), is(0));
-		assertEquals(Signal.State.FLOATING, notGate.evaluateOutput());
-		assertThat(notGate.getInputs().size(), is(0));
-	}
-
-	@Test
-	public void testEvaluatingChangingOutputs() {
-		addInputMock1ToInputs(Signal.State.LOW);
-		assertEquals(Signal.State.HIGH, notGate.evaluateOutput());
-
-		addInputMock1ToInputs(Signal.State.HIGH);
-		assertEquals(Signal.State.LOW, notGate.evaluateOutput());
-
-		addInputMock1ToInputs(Signal.State.FLOATING);
-		assertEquals(Signal.State.FLOATING, notGate.evaluateOutput());
-
-		addInputMock1ToInputs(Signal.State.LOW);
-		assertEquals(Signal.State.HIGH, notGate.evaluateOutput());
-	}
-
-	public void addInputMock1ToInputs(Signal.State state) {
-		Mockito.when(inputMock1.getState()).thenReturn(state);
-
-		Map<String, Input> hashMap = new HashMap<String, Input>();
-		hashMap.put(id, inputMock1);
-		try {
-			Field field = Component.class.getDeclaredField("inputs");
-			field.setAccessible(true);
-			field.set(notGate, hashMap);
-		} catch (NoSuchFieldException e) {
-			System.out.println(e.getMessage());
-		} catch (IllegalAccessException e) {
-			System.out.println(e.getMessage());
-		}
+	@Override
+	public TruthTable generateTruthTable() {
+		TruthTable table = new TruthTable();
+		table.add(SignalConfiguration.ONE_LOW, Signal.State.HIGH);
+		table.add(SignalConfiguration.ONE_HIGH, Signal.State.LOW);
+		table.add(SignalConfiguration.ONE_FLOATING, Signal.State.FLOATING);
+		table.add(SignalConfiguration.NO_SIGNALS, Signal.State.FLOATING);	
+		table.add(SignalConfiguration.TWO_HIGH, Signal.State.FLOATING);
+		table.add(SignalConfiguration.TWO_LOW, Signal.State.FLOATING);
+		table.add(SignalConfiguration.TWO_FLOATING, Signal.State.FLOATING);
+		return table;
 	}
 }
