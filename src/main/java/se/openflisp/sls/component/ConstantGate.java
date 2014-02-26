@@ -35,9 +35,10 @@ public class ConstantGate extends Gate {
 	private final Signal.State state;
 	
 	/**
-	 * {@inheritDoc}
+	 * Creates a ConstantGate
 	 * 
-	 * @param state		state which the gate will constantly output
+         * @param identifier identifier for the Gate
+	 * @param state state which the gate will constantly output
 	 */
 	public ConstantGate(String identifier, Signal.State state) {
 		super(identifier);
@@ -48,9 +49,11 @@ public class ConstantGate extends Gate {
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * Creates a ConstantGate
 	 * 
-	 * @param state		state which the gate will constantly output
+         * @param identifier identifier for the Gate
+	 * @param state	state which the gate will constantly output
+         * @param delegator delegator for the Gate
 	 */
 	public ConstantGate(String identifier, Signal.State state, ComponentEventDelegator delegator) {
 		super(identifier, delegator);

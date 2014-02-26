@@ -38,7 +38,9 @@ public abstract class Gate extends Component {
 	public static final String OUTPUT = "Q";
 	
 	/**
-	 * {@inheritDoc}
+	 * Creates a Gate
+         * 
+         * @param identifier identifier for the Gate
 	 */
 	public Gate(String identifier) {
 		super(identifier);
@@ -46,7 +48,10 @@ public abstract class Gate extends Component {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Creates a Gate
+         * 
+         * @param identifier identifier for the Gate
+         * @param delegator delegator for the Gate
 	 */
 	public Gate(String identifier, ComponentEventDelegator delegator) {
 		super(identifier, delegator);
@@ -66,7 +71,7 @@ public abstract class Gate extends Component {
 	 * Evaluate the gate's different inputs and provide a output signal.
 	 * 
 	 * If it is unable to decide a signal for the given inputs the method
-	 * must provide {@link Signal.State#FLOATING}.
+	 * must provide {@link se.openflisp.sls.Signal.State#FLOATING}.
 	 * 
 	 * @return the evaluated signal for the given inputs
 	 */

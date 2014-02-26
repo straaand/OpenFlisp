@@ -29,14 +29,19 @@ import java.util.Collection;
 public class NotGate extends Gate {
 	
 	/**
-	 * {@inheritDoc}
+	 * Creates a NotGate
+         * 
+         * @param identifier identifier for the Gate
 	 */
 	public NotGate(String identifier) {
 		super(identifier);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Creates a NotGate
+         * 
+         * @param identifier  identifier for the Gate
+         * @param delegator delegator for the Gate
 	 */
 	public NotGate(String identifier, ComponentEventDelegator delegator) {
 		super(identifier, delegator);

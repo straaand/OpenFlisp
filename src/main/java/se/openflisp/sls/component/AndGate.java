@@ -30,14 +30,19 @@ import se.openflisp.sls.util.SignalCollection;
 public class AndGate extends Gate {
 
 	/**
-	 * {@inheritDoc}
+	 * Creates an AndGate
+         * 
+         * @param identifier Identifier for the Gate
 	 */
 	public AndGate(String identifier) {
 		super(identifier);
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * Creates an AndGate
+         * 
+         * @param identifier Identifier for the Gate
+         * @param delegator Delegator to the Gate
 	 */
 	public AndGate(String identifier, ComponentEventDelegator delegator) {
 		super(identifier, delegator);
