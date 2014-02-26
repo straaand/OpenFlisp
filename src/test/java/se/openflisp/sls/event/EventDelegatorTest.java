@@ -181,7 +181,7 @@ public abstract class EventDelegatorTest<T> {
 
 	@Test
 	public void testAddListeners() {
-		EventDelegator delegator = getDelegatorInstance();
+		EventDelegator<T> delegator = getDelegatorInstance();
 		addListeners(delegator, getListenerClass());
 		assertThat(delegator.getModelListeners().size(), is(NR_OF_MODEL_LISTENERS));
 		assertThat(delegator.getSwingListeners().size(), is(NR_OF_SWING_LISTENERS));
@@ -207,29 +207,21 @@ public abstract class EventDelegatorTest<T> {
 	 * Uses Constants NR_OF_DEFAULT_LISTENERS,
 	 * NR_OF_SWING_LISTENERS and NR_OF_MODEL_LISTENERS
 	 */
-	public void addListeners(EventDelegator delegator, Class<T> listenerClass) {
+	public void addListeners(EventDelegator<T> delegator, Class<T> listenerClass) {
 		listeners = new ArrayList<T>();
-		T tempListener;
-
-		int nrOfListeners = NR_OF_DEFAULT_LISTENERS
-			+ NR_OF_SWING_LISTENERS
-			+ NR_OF_MODEL_LISTENERS;
-
-		for(int i = 0; i < nrOfListeners; i++) {
-			tempListener = Mockito.mock(listenerClass);
-			listeners.add(tempListener);
+		for (int i = 0; i < NR_OF_DEFAULT_LISTENERS; i++) {
+			T listener = Mockito.mock(listenerClass);
+			delegator.addListener(ListenerContext.DEFAULT, listener);
+			listeners.add(listener);
 		}
-		
-		int i = 0;
-		for(T l : listeners) {
-			if (i < NR_OF_DEFAULT_LISTENERS) {
-				delegator.addListener(ListenerContext.DEFAULT, listeners.get(i));
-			} else if (i < NR_OF_DEFAULT_LISTENERS + NR_OF_SWING_LISTENERS) {
-				delegator.addListener(ListenerContext.SWING, listeners.get(i));
-			} else {
-				delegator.addListener(ListenerContext.MODEL, listeners.get(i));
-			}
-			i++;
+		for (int i = 0; i < NR_OF_SWING_LISTENERS; i++) {
+			T listener = Mockito.mock(listenerClass);
+			delegator.addListener(ListenerContext.SWING, listener);
+			listeners.add(listener);
+		}for (int i = 0; i < NR_OF_MODEL_LISTENERS; i++) {
+			T listener = Mockito.mock(listenerClass);
+			delegator.addListener(ListenerContext.MODEL, listener);
+			listeners.add(listener);
 		}
 	}
 
