@@ -104,6 +104,84 @@ public class SignalCollectionTest {
 		));
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testCountNullCollection() {
+		SignalCollection.countState(null, Signal.State.FLOATING);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testCountNullState() {
+		SignalCollection.countState(createCollection(), null);
+	}
+	
+	@Test
+	public void testCountAnEmptyCollection() {
+		assertEquals(0, SignalCollection.countState(
+				createCollection(),
+				Signal.State.FLOATING
+			));
+	}
+	
+	@Test
+	public void testCountStateWithSingleCorrectElement() {
+		assertEquals(1, SignalCollection.countState(
+			createCollection(
+				Signal.State.FLOATING
+			),
+			Signal.State.FLOATING
+		));
+	}
+
+	@Test
+	public void testCountStateWithSingleIncorrectElement() {
+		assertEquals(0, SignalCollection.countState(
+			createCollection(
+				Signal.State.FLOATING
+			), 
+			Signal.State.LOW
+		));
+	}
+	
+	@Test
+	public void testCountStateWithOneCorrectElement() {
+		assertEquals(1, SignalCollection.countState(
+			createCollection(
+				Signal.State.FLOATING, Signal.State.FLOATING, Signal.State.LOW
+			), 
+			Signal.State.LOW
+		));
+	}
+	
+	@Test
+	public void testCountStateWithManyCorrectElements() {
+		assertEquals(2, SignalCollection.countState(
+			createCollection(
+				Signal.State.FLOATING, Signal.State.HIGH, Signal.State.HIGH, Signal.State.LOW
+			), 
+			Signal.State.HIGH
+		));
+	}
+	
+	@Test
+	public void testCountStateWithOnlyIncorrectElements() {
+		assertEquals(0, SignalCollection.countState(
+			createCollection(
+				Signal.State.FLOATING, Signal.State.HIGH, Signal.State.HIGH
+			), 
+			Signal.State.LOW
+		));
+	}
+	
+	@Test
+	public void testCountStateWithOnlyCorrectElements() {
+		assertEquals(3, SignalCollection.countState(
+			createCollection(
+				Signal.State.FLOATING, Signal.State.FLOATING, Signal.State.FLOATING
+			), 
+			Signal.State.FLOATING
+		));
+	}
+	
 	private Collection<Signal> createCollection(Signal.State... states) {
 		Collection<Signal> collection = new ArrayList<Signal>();
 		for (Signal.State state : states) {

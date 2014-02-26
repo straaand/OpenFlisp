@@ -47,4 +47,25 @@ public class SignalCollection {
 		}
 		return false;
 	}
+	
+	/**
+	 * Counts the number of Signals that is a specific state in a collection.
+	 * 
+	 * @param signals	a collection of signals to count
+	 * @param state		the state that should be counted
+	 * @return the number of signals in the specified state
+	 * @throws IllegalArgumentException if one of the parameters is null
+	 */
+	public static int countState(Collection<? extends Signal> signals, Signal.State state) {
+		if (signals == null || state == null) {
+			throw new IllegalArgumentException("Requires a non-null collection and state.");
+		}
+		int count = 0;
+		for (Signal signal : signals) {
+			if (signal.getState().equals(state)) {
+				count++;
+			}
+		}
+		return count;
+	}
 }
