@@ -54,9 +54,8 @@ public class SignalView extends JButton {
 		setPreferredSize(btnSize);
 		this.signal = signal;
 		setContentAreaFilled(false);
-		
-		//this.Signal
 	}
+	
 	/**
 	 * Custom paint method so our button looks like a signal
 	 */

@@ -146,9 +146,9 @@ public class GateView extends ComponentView {
 	 */
 	public void addSignal(Signal signal) {
 		if (signal instanceof Output) 
-			this.outputSignals.add(new OutputSignal(signal));
+			this.outputSignals.add(new SignalView(signal));
 		if (signal instanceof Input)
-			this.inputSignals.add(new InputSignal(signal));
+			this.inputSignals.add(new SignalView(signal));
 	}
 	
 	public JPanel getIdentifierPane() {
