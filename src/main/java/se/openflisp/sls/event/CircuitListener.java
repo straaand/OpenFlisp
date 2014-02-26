@@ -31,7 +31,7 @@ public interface CircuitListener {
 
 	/**
 	 * Called when a new Component is added to a Circuit. Will be followed
-	 * by a {@link #onComponentMoved(Component, Point)} if the Circuit has knowledge
+	 * by a {@link #onComponentMoved(Component, Point, Point)} if the Circuit has knowledge
 	 * of it's location.
 	 * 
 	 * @param component		component that have been added
