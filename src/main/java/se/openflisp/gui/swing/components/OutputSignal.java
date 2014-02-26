@@ -50,7 +50,7 @@ public class OutputSignal extends SignalView {
 		} else {
 			g.setColor(getBackground());
 		}
-		g.fillOval(btnSize.width - (arcLength+1),0, arcLength-1, arcLength-1);
+		g.fillOval((btnSize.width - (arcLength+1)),0, arcLength-1, arcLength-1);
 	}
 	
 	/**

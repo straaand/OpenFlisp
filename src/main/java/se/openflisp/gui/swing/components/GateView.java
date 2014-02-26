@@ -20,6 +20,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 import se.openflisp.sls.Component;
@@ -35,7 +38,6 @@ import se.openflisp.sls.Input;
 import se.openflisp.sls.Output;
 import se.openflisp.sls.Signal;
 import se.openflisp.gui.swing.components.ComponentView;
-import se.openflisp.sls.component.NotGate;
 import se.openflisp.sls.component.*;
 
 
@@ -55,8 +57,8 @@ public class GateView extends ComponentView {
 	private JPanel	inputPanel;
 	private	 JPanel	outputPanel;
 	private JLabel	identifier;
-	private List<OutputSignal>	outputSignals;
-	private List<InputSignal>	inputSignals;
+	public List<SignalView>	outputSignals;
+	public List<SignalView>	inputSignals;
 
 	/**
 	 * Creates a new gateview given a component
@@ -64,7 +66,12 @@ public class GateView extends ComponentView {
 	 */
 	public GateView(Component component) {
 		super(component);
-		setSize(new Dimension(componentSize,componentSize/2));
+		setSize(new Dimension(componentSize*4,componentSize));
+		this.setPreferredSize(new Dimension(componentSize*2,componentSize));
+		this.setMaximumSize(new Dimension(componentSize*2,componentSize));
+		this.setMinimumSize(new Dimension(componentSize*2,componentSize));
+		
+		
 		setLayout(new BorderLayout());
 		this.identifier = new JLabel("", JLabel.CENTER);
 		this.identifierPanel = new JPanel();
@@ -72,13 +79,16 @@ public class GateView extends ComponentView {
 		this.identifierPanel.add(identifier);
 		
 		if (component instanceof NotGate){
-			this.identifier.setText("=1");
+			this.identifier.setText("1");
 		}		
 		else if (component  instanceof ConstantGate) {
-			this.identifier.setText("1");
+			if (((ConstantGate) this.component).getConstantState() == Signal.State.HIGH) 
+				this.identifier.setText("1");
+			else
+				this.identifier.setText("0");
 		}	
 		else if (component instanceof OrGate) {
-			this.identifier.setText(">");
+			this.identifier.setText(">=1");
 		}
 		else if ( (component instanceof AndGate) || (component instanceof NandGate) ) {
 			this.identifier.setText("&");
@@ -87,11 +97,13 @@ public class GateView extends ComponentView {
 		this.identifier.setOpaque(true);
 		this.identifier.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.identifier.setBackground(Color.WHITE);
-		this.identifier.setMaximumSize(new Dimension(componentSize/2 , componentSize));
+		this.identifier.setPreferredSize(new Dimension(componentSize, componentSize));
+		this.identifier.setMaximumSize(new Dimension(componentSize, componentSize));
+		this.identifier.setMinimumSize(new Dimension(componentSize, componentSize));
 		
 		
-		this.inputSignals = new ArrayList<InputSignal>();
-		this.outputSignals = new ArrayList<OutputSignal>();
+		this.inputSignals = new ArrayList<SignalView>();
+		this.outputSignals = new ArrayList<SignalView>();
 		
 		this.inputPanel = new JPanel();
 		this.inputPanel.setLayout(new BoxLayout(this.inputPanel, BoxLayout.Y_AXIS));
@@ -99,33 +111,29 @@ public class GateView extends ComponentView {
 		this.outputPanel = new JPanel();
 		this.outputPanel.setLayout(new BoxLayout(this.outputPanel, BoxLayout.Y_AXIS));
 		
-		this.inputPanel.setPreferredSize(new Dimension(componentSize/4, componentSize/2));
-		this.outputPanel.setPreferredSize(new Dimension(componentSize/4,componentSize/2));
+		this.inputPanel.setPreferredSize(new Dimension(componentSize/2, componentSize));
+		this.outputPanel.setPreferredSize(new Dimension(componentSize/2,componentSize));
 		
 		for(Output output : component.getOutputs()) {
-			OutputSignal out = new OutputSignal(output);
+			SignalView out = new SignalView(output);
 			this.outputSignals.add(out);
 			this.outputPanel.add( Box.createVerticalGlue() );
-			out.setMaximumSize(new Dimension(componentSize/4,componentSize/5));
+			out.setMaximumSize(out.btnSize);
 			this.outputPanel.add(out);
 			this.outputPanel.add( Box.createVerticalGlue() );
 		}
 		
 		for(Input input : component.getInputs()) {
-			InputSignal in = new InputSignal(input);
+			SignalView in = new SignalView(input);
 			this.inputSignals.add(in);
 			this.inputPanel.add( Box.createVerticalGlue() );
-			in.setMaximumSize(new Dimension(componentSize/4,componentSize/5));
+			in.setMaximumSize(in.btnSize);
 			this.inputPanel.add(in);
 			this.inputPanel.add( Box.createVerticalGlue() );
 		}
 		
-		
-		this.outputPanel.setBorder(new LineBorder(Color.BLACK));
 		this.inputPanel.setOpaque(false);
-		this.inputPanel.setBorder(new LineBorder(Color.BLACK));
 		this.outputPanel.setOpaque(false);
-		
 		
 		add(inputPanel, BorderLayout.WEST);
 		add(identifier, BorderLayout.CENTER);
@@ -141,5 +149,9 @@ public class GateView extends ComponentView {
 			this.outputSignals.add(new OutputSignal(signal));
 		if (signal instanceof Input)
 			this.inputSignals.add(new InputSignal(signal));
+	}
+	
+	public JPanel getIdentifierPane() {
+		return this.identifierPanel;
 	}
 }

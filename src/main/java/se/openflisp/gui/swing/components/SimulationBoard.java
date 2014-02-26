@@ -30,14 +30,21 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import se.openflisp.sls.event.CircuitListener;
 import se.openflisp.sls.event.ComponentListener;
+import se.openflisp.sls.event.ListenerContext;
 
 import se.openflisp.sls.simulation.Circuit2D;
 import se.openflisp.sls.Component;
@@ -54,32 +61,35 @@ import	se.openflisp.gui.swing.components.ComponentView;
  */
 @SuppressWarnings("serial")
 public class SimulationBoard extends JPanel{
-	
+
 	// For drag and drop support
 	private DropTarget dropTarget;
-	
+
 	// The circuit we are simulating
 	private Circuit2D circuit;
-	
+
 	// In order to match component with componentViews
 	private Map<Component, ComponentView> components;
-	
+
 	// A panel containing the components
 	private JPanel componentLayer;
-	
+
 	// A panel containing the background
 	private JPanel backgroundPanel;
+	
+	// We need this point when moving components
+	Point point;
 
 	/**
 	 * Creates the simulation board
 	 */
 	public SimulationBoard() {
-		
+
 		// Handle drop events
 		this.dropTarget = new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetListener() {
 			@Override
 			public void drop(DropTargetDropEvent dropEvent) {
-				// Try to converte the transferable to a string and send it to ComponentFactory for creation
+				// Try to convert the transferable to a string and send it to ComponentFactory for creation
 				try {
 					Transferable tr = dropEvent.getTransferable();
 					String identifier;
@@ -113,39 +123,39 @@ public class SimulationBoard extends JPanel{
 			@Override
 			public void dragOver(DropTargetDragEvent arg0) {
 			}
-			
+
 		}, true, null);
-		
+
 		// We need absolute positioning
 		this.setLayout(null);
-		
+
 		// For drag and drop support
 		this.setDropTarget(dropTarget);
-		
+
 		// Create the circuit and start simulation
 		this.circuit = new Circuit2D();
 		this.circuit.getSimulation().start();
-		
+
 		// Instantiate the componentLayer and set opaque
 		this.componentLayer = new ComponentLayer();
 		this.componentLayer.setLayout(null);
 		this.componentLayer.setOpaque(false);
-		
+
 		this.backgroundPanel = new BackgroundPanel();
 		this.backgroundPanel.setOpaque(true);
-		
+
 		// This will add the panels to our layeredPane in order to make a transparent components
 		this.components = new HashMap<Component, ComponentView>();
 		this.add(backgroundPanel, new Integer(0), 0);
 		this.add(componentLayer, new Integer(1),0);
-		
+
 		// Set a listener on the circuit
-		this.circuit.getEventDelegator().addListener(circtuitHandler);
-		
+		this.circuit.getEventDelegator().addListener(ListenerContext.SWING,circtuitHandler);
+
 		//This is a test method
 		//simulationTest();
 	}
-	
+
 	/**
 	 * Adds a component to the simulation board
 	 * @param component		the component to be added
@@ -154,34 +164,58 @@ public class SimulationBoard extends JPanel{
 		component.setOpaque(false);
 		this.componentLayer.add(component);
 		this.components.put(component.component, component);
+		
+		if (component instanceof GateView) {
+			JPanel identifierPanel = ((GateView) component).getIdentifierPane();
+			component.addMouseMotionListener(new MouseMotionAdapter()  {
+
+				
+				@Override
+				public void mouseMoved(MouseEvent e) {
+					// TODO Auto-generated method stub
+				}
+
+				@Override
+				public void mouseDragged(MouseEvent mouseevent) {
+					if (mouseevent.getComponent().getComponentAt(mouseevent.getPoint()) instanceof JLabel && SimulationBoard.this.point != null) {
+						Point delta = new Point(mouseevent.getX() - SimulationBoard.this.point.x, 
+								mouseevent.getY() - SimulationBoard.this.point.y );
+						Point curLocation = SimulationBoard.this.circuit.getComponentLocation(((GateView)mouseevent.getSource()).component);
+						
+						SimulationBoard.this.circuit.setComponentLocation(((GateView)mouseevent.getSource()).component,
+								new Point(curLocation.x + delta.x, curLocation.y + delta.y));
+					}
+				}
+			});
+			component.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseClicked(MouseEvent mouseevent) {
+					
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+				}
+
+				@Override
+				public void mouseExited(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+				}
+
+				@Override
+				public void mousePressed(MouseEvent mouseevent) {
+					SimulationBoard.this.point = mouseevent.getPoint();
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent arg0) {
+				}
+			});
+		}
 	}
-	
-	/**
-	 * This is a test
-	 */
-	public void simulationTest() {
-		/*
-		NotGate g = new NotGate("a");
-		g.getInput("input1");
-		this.circuit.addComponent(g);
-		ConstantGate ett = new ConstantGate("ett", Signal.State.HIGH);
-		ett.getOutput().connect(g.getInput("input1"));
-		
-		ComponentView view = new GateView(ett);
-		view.setOpaque(false);
-		this.componentLayer.add(view);
-		view.setBounds(200,200,200,100);
-		this.components.put(ett, view);
-		
-		view = new GateView(g);
-		view.setOpaque(false);
-		this.componentLayer.add(view);
-		view.setBounds(400,400,200,100);
-		
-		this.components.put(g, view);
-		*/
-	}
-	
+
 	/**
 	 * We need to override the painting
 	 */
@@ -192,44 +226,25 @@ public class SimulationBoard extends JPanel{
 		this.componentLayer.setBounds(0,0,this.getWidth(),this.getHeight());
 		super.paintComponent(g2);	
 	}
-    
+
 	/**
-	 * This is the listener for all components
+	 * Listener for the circuit
 	 */
-    protected final ComponentListener swingHandler = new ComponentListener() {
-        @Override
-        public void onSignalChange(Component component, Signal signal) {
-        	
-        }
-
-		@Override
-		public void onSignalConnection(Input input, Output output) {
-
-			
-		}
-
-		@Override
-		public void onSignalDisconnection(Input input, Output output) {
-			
-		}
-    };
-    
-    /**
-     * Listener for the circuit
-     */
-    protected final CircuitListener circtuitHandler = new CircuitListener() {
-    	/**
-    	 * Will add a new component to the circuit
-    	 * @param Component		the component to be added
-    	 */
+	protected final CircuitListener circtuitHandler = new CircuitListener() {
+		/**
+		 * Will add a new component to the circuit
+		 * @param Component		the component to be added
+		 */
 		@Override
 		public void onComponentAdded(Component component) {
 			addComponent(ComponentFactory.createGateFromComponent(component));
+			SimulationBoard.this.repaint();
+			SimulationBoard.this.revalidate();
 		}
 
 		@Override
 		public void onComponentRemoved(Component component) {
-			
+
 		}
 
 		/**
@@ -238,41 +253,41 @@ public class SimulationBoard extends JPanel{
 		 */
 		@Override
 		public void onComponentMoved(Component component, Point from, Point to) {
-			SimulationBoard.this.components.get(component).setBounds(to.x,to.y,ComponentView.componentSize,ComponentView.componentSize/2);	
+			SimulationBoard.this.components.get(component).setBounds(to.x,to.y,ComponentView.componentSize*2,ComponentView.componentSize);	
 		}
 	};
 
-   /**
-    * 	Creates a grid in the background layer
-    */
-    public class BackgroundPanel extends JPanel {
-    	@Override
-    	public void paintComponent(Graphics g) {
-    		Graphics2D g2 = (Graphics2D) g;
-            g2.setColor(new Color(0xCC, 0xCC, 0xCC));
-            g2.drawRect(0, 0, getWidth()-1, getHeight());
-    		g2.setColor(new Color(0xCD, 0xCD, 0xCD));
-    		paintGrid(g2,this.getWidth(),this.getHeight());    		
-    	}
-    	
-    	public void paintGrid(Graphics g, int gridWidth, int gridHeight) {
-            for(int i=1; i<gridWidth; i=i+10)
-            {
-                   g.drawLine(i, 0,      i,      gridHeight);          
-            }      
+	/**
+	 * 	Creates a grid in the background layer
+	 */
+	public class BackgroundPanel extends JPanel {
+		@Override
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setColor(new Color(0xCC, 0xCC, 0xCC));
+			g2.drawRect(0, 0, getWidth()-1, getHeight());
+			g2.setColor(new Color(0xCD, 0xCD, 0xCD));
+			paintGrid(g2,this.getWidth(),this.getHeight());    		
+		}
 
-            for(int i=1; i<gridHeight; i=i+10)
-            {      
-                g.drawLine(0, i, gridWidth, i);          
-            } 
-        }
-    }
-    
-    public class ComponentLayer extends JPanel {
-    	@Override
-    	public void paintComponent(Graphics g) {
-    		Graphics2D g2 = (Graphics2D) g;
-    		super.paintComponent(g2);
-    	}
-    }
+		public void paintGrid(Graphics g, int gridWidth, int gridHeight) {
+			for(int i=1; i<gridWidth; i=i+10)
+			{
+				g.drawLine(i, 0,      i,      gridHeight);          
+			}      
+
+			for(int i=1; i<gridHeight; i=i+10)
+			{      
+				g.drawLine(0, i, gridWidth, i);          
+			} 
+		}
+	}
+
+	public class ComponentLayer extends JPanel {
+		@Override
+		public void paintComponent(Graphics g) {
+			Graphics2D g2 = (Graphics2D) g;
+			super.paintComponent(g2);
+		}
+	}
 }

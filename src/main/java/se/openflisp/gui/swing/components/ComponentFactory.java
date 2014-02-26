@@ -26,7 +26,12 @@ import se.openflisp.sls.component.NotGate;
  * @author Daniel Svensson <daniel@dsit.se>
  * @version 1.0
  */
+
+
 public class ComponentFactory {
+	private static int gateNum;
+	private static int inputNum;
+	
 	/**
 	 * Creates a componentView given an Identifier
 	 * @param identifier		the identifier
@@ -34,10 +39,11 @@ public class ComponentFactory {
 	 */
 	public static GateView createGateFromIdentifier(String identifier) {
 		try {
-			
-			if(identifier.equals("AndGate")) 
-				return new GateView(new AndGate("AndGate"));
-			
+			if(identifier.equals("AndGate")) {
+				AndGate andGate = new AndGate("AndGate" + Integer.toString(gateNum++));
+				andGate.getInput("input" + Integer.toString(inputNum++));
+				return new GateView(andGate);
+			}
 			else if(identifier.equals("NotGate")) 
 				return new GateView(new NotGate("NotGate"));
 			
