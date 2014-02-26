@@ -37,45 +37,44 @@ import se.openflisp.sls.component.OrGate;
 /**	
  * Component for showing all components and enabling drag and drop creation.
  * 
- * @author Daniel Svensson <daniel@dsit.se>
+ * @author oskar selberg <oskar.selberg@gmail.com>
  * @version 1.0
  */
 @SuppressWarnings("serial")
 public class ComponentPanel extends JPanel {
-	//JPanels for the panel
-	private JPanel standardGates;
-	private JPanel colOne;
-	private JPanel colTwo;
-	
-	
 	//Layout for the panel
 	private GridBagLayout layout;
+	
+	//Constraints for the layout
 	private GridBagConstraints constraints;
 	
-	// All components to show
+	//All components to show
 	private ComponentView andGate;
 	private ComponentView notGate;
 	private ComponentView constantGate;
 	private ComponentView nandGate;
 	private ComponentView orGate;
 	//private ComponentView norGate;	//TODO add when finished
-	//private ComponentView xorGate;	//TODO add when finiched
+	//private ComponentView xorGate;	//TODO add when finished
 	
 	/**
-	 * Creates the component panel
+	 * Creates the component panel, from which you can drag-out components to the SimulationBoard
 	 */
 	public ComponentPanel() {
+		//Initiate variables
 		constraints = new GridBagConstraints();
         layout = new GridBagLayout();
         
-        constraints.weighty = 1.0;	//makes space between the components
+        //set default constraints
+        constraints.weighty = 1.0;	//add space between the components
         
+        //add the constraints to the layout
 		layout.setConstraints(this, constraints);
 		
+		//add the layout to this component
 		this.setLayout(layout);
 
-		
-		
+		//Initiate the ComponentViews
 		andGate = new GateView(new AndGate("AndGate"));
 		notGate = new GateView(new NotGate("NotGate"));
 		constantGate = new GateView(new ConstantGate("ConstantGate", Signal.State.LOW));
@@ -84,6 +83,7 @@ public class ComponentPanel extends JPanel {
 		//norGate = new GateView(new NorGate("NorGate"));	//TODO add when finished
 		//xorGate = new GateView(new XorGate("XorGate"));	//TODO add when finished
 		
+		//set the size of the components
 		andGate.setMaximumSize(new Dimension(ComponentView.componentSize,2));
 		notGate.setMaximumSize(new Dimension(ComponentView.componentSize,ComponentView.componentSize/2));
 		constantGate.setMaximumSize(new Dimension(ComponentView.componentSize,ComponentView.componentSize/2));
@@ -92,36 +92,43 @@ public class ComponentPanel extends JPanel {
 		//norGate.setMaximumSize(new Dimension(ComponentView.componentSize,ComponentView.componentSize/2));	//TODO add when finished
 		//xorGate.setMaximumSize(new Dimension(ComponentView.componentSize,ComponentView.componentSize/2));	//TODO add when finished
 		
+		//Add the ConstantGate to CompontPanel
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		this.add( constantGate, constraints );
 		
+		//Add the NotGate to CompontPanel
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		this.add( notGate, constraints );
-
+		
+		//Add the AndGate to CompontPanel
 		constraints.gridx = 0;
 		constraints.gridy = 2;
 		this.add( andGate, constraints );
 	
+		//Add the OrGate to CompontPanel
 		constraints.gridx = 0;
 		constraints.gridy = 3;
 		this.add( orGate, constraints );
 
+		//Add the NandGate to CompontPanel
 		constraints.gridx = 1;
 		constraints.gridy = 0;
-		this.add( nandGate, constraints );
-
+		this.add( nandGate, constraints );		
+		
+		//Add the NorGate to CompontPanel
 		constraints.gridx = 1;
 		constraints.gridy = 1;
 		//this.add( norGate, constraints );	//TODO add when finished
 
+		//Add the XorGate to CompontPanel
 		constraints.gridx = 1;
 		constraints.gridy = 2;
 		//this.add(xorGate, constraints );	//TODO add when finished
 
 		/**
-		 * Enable drag and drop listener, by sending a string to the reciever
+		 * Enable drag and drop listener, by sending a string to the receiver
 		 */
 		this.notGate.ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, new DragGestureListener() {
 			
@@ -152,4 +159,3 @@ public class ComponentPanel extends JPanel {
 		});
 	}
 }
-
