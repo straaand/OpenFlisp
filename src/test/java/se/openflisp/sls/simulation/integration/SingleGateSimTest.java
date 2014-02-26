@@ -18,8 +18,6 @@ package se.openflisp.sls.simulation.integration;
 
 import static org.junit.Assert.*;
 
-import java.util.concurrent.locks.ReentrantLock;
-
 import org.junit.Before;
 
 import se.openflisp.sls.Signal;
@@ -32,24 +30,12 @@ import se.openflisp.sls.component.*;
  * @version 1.0
  */
 public abstract class SingleGateSimTest extends SimulationTest{
-	public ConstantGate constantHigh, constantLow, constantFloating;
 	public String gateID;
-	private String constantHighID, constantLowID, constantFloatingID;
-	private ReentrantLock testLock;
 	
 	@Before
 	public void setup() {
 		super.setup();
-		constantHighID = "ConstantHigh";
-		constantLowID = "ConstantLow";
-		constantFloatingID = "ConstantFloating";
 		
-		constantHigh = new ConstantGate(constantHighID, Signal.State.HIGH);
-		constantLow = new ConstantGate(constantLowID, Signal.State.LOW);
-		constantFloating = new ConstantGate(constantFloatingID, Signal.State.FLOATING);
-		
-		testLock = new ReentrantLock();
-
 	}
 	
 	/**
@@ -68,43 +54,20 @@ public abstract class SingleGateSimTest extends SimulationTest{
 		circuit.addComponent(gateToSimulate);
 		ComponentSimListener testListener = new ComponentSimListener();
 		gateToSimulate.getEventDelegator().addListener(testListener);
-		
-		testLock.lock();
-		try {
-			if (inputGates.length > 0) {
-				int i = 0;
-				for (Gate inputGate : inputGates) {
-					String inputID = Integer.toString(i);
-					circuit.addComponent(inputGate);
-					gateToSimulate.getInput(inputID).connect(inputGate.getOutput());
-					assertTrue(gateToSimulate.getInput(inputID).isConnected());
-					assertTrue(inputGate.getOutput().isConnected());
-					i++;
-				}
-			}
-			doTheChokaChoka(testListener, gateToSimulate);
-			
-			assertEquals(expectedOutput, gateToSimulate.getOutput().getState());
-		} finally {
-			testLock.unlock();
-		}
-		
-	}
 	
-	public void doTheChokaChoka(ComponentSimListener testListener, Gate gateToSim) {
-		boolean waitedEnough = false;
-		long timeout = System.currentTimeMillis() + 1200;
-		
-		while (!waitedEnough) {
-			if (/*testListener.isOutputChanged()*/ !gateToSim.getOutput().getState().equals(Signal.State.FLOATING)) {
-				waitedEnough = true;
-				System.out.println("Exit by listener.");
-			} else if (System.currentTimeMillis() > timeout) {
-				waitedEnough = true;
-				System.out.println("Exit by timeout.");
+		if (inputGates.length > 0) {
+			int i = 0;
+			for (Gate inputGate : inputGates) {
+				String inputID = Integer.toString(i);
+				circuit.addComponent(inputGate);
+				gateToSimulate.getInput(inputID).connect(inputGate.getOutput());
+				assertTrue(gateToSimulate.getInput(inputID).isConnected());
+				assertTrue(inputGate.getOutput().isConnected());
+				i++;
 			}
 		}
+		waitForSignalChange(gateToSimulate);
 		System.out.println("\tonSignalChange calls: " + String.valueOf(testListener.changedTimes()));
+		assertEquals(expectedOutput, gateToSimulate.getOutput().getState());
 	}
-
 }

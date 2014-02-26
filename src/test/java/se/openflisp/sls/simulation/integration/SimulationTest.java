@@ -16,9 +16,13 @@
  */
 package se.openflisp.sls.simulation.integration;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.After;
 import org.junit.Before;
 
+import se.openflisp.sls.Signal;
+import se.openflisp.sls.component.*;
 import se.openflisp.sls.simulation.Circuit;
 
 /**
@@ -29,9 +33,19 @@ import se.openflisp.sls.simulation.Circuit;
  */
 public abstract class SimulationTest {
 	public Circuit circuit;
+	public ConstantGate constantHigh, constantLow, constantFloating;
+	private String constantHighID, constantLowID, constantFloatingID;
 	
 	@Before
 	public void setup() {
+		constantHighID = "ConstantHigh";
+		constantLowID = "ConstantLow";
+		constantFloatingID = "ConstantFloating";
+		
+		constantHigh = new ConstantGate(constantHighID, Signal.State.HIGH);
+		constantLow = new ConstantGate(constantLowID, Signal.State.LOW);
+		constantFloating = new ConstantGate(constantFloatingID, Signal.State.FLOATING);
+		
 		circuit = new Circuit();
 		circuit.getSimulation().start();
 	}
@@ -39,5 +53,37 @@ public abstract class SimulationTest {
 	@After
 	public void stopSim() {
 		circuit.getSimulation().interrupt();
+	}
+	
+	public void connectGates(Gate[] fromOutputs, Gate toInput) {
+		if (!circuit.contains(toInput)) { 
+			circuit.addComponent(toInput);
+		}
+		if (fromOutputs.length > 0) {
+			int i = 0;
+			for (Gate output : fromOutputs) {
+				String inputID = Integer.toString(i);
+				toInput.getInput(inputID).connect(output.getOutput());
+				assertTrue(toInput.getInput(inputID).isConnected());
+				assertTrue(output.getOutput().isConnected());
+				i++;
+			}
+		}		
+	}
+	
+	public void waitForSignalChange(Gate gateToTest) {
+		boolean waitedEnough = false;
+		long timeout = System.currentTimeMillis() + 1200;
+		
+		while (!waitedEnough) {
+			if (!gateToTest.getOutput().getState().equals(Signal.State.FLOATING)
+				&& (System.currentTimeMillis() + 900) > timeout ) {
+				waitedEnough = true;
+				System.out.println("Exit by output signal change.");
+			} else if (System.currentTimeMillis() > timeout) {
+				waitedEnough = true;
+				System.out.println("Exit by timeout.");
+			}
+		}
 	}
 }
