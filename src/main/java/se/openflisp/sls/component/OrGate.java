@@ -29,14 +29,19 @@ import java.util.Collection;
 public class OrGate extends Gate {
 
 	/**
-	 * {@inheritDoc}
+	 * Creates an OrGate
+         * 
+         * @param identifier identifier for the Gate
 	 */
 	public OrGate(String identifier) {
 		super(identifier);
 	}
 
-	/**
-	 * {@inheritDoc}
+        /**
+	 * Creates an OrGate
+         * 
+         * @param identifier identifier for the Gate
+         * @param delegator delegator for the Gate
 	 */
 	public OrGate(String identifier, ComponentEventDelegator delegator) {
 		super(identifier, delegator);

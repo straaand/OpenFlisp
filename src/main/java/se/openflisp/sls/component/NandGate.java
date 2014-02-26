@@ -30,14 +30,19 @@ import se.openflisp.sls.util.SignalCollection;
 public class NandGate extends Gate {
 	
 	/**
-	 * {@inheritDoc}
+	 * Creates a NandGate
+         * 
+         * @param identifier identifier for the Gate
 	 */
 	public NandGate(String identifier) {
 		super(identifier);
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * Creates a NandGate
+         * 
+         * @param identifier identifier for the Gate
+         * @param delegator delegator for the Gate
 	 */
 	public NandGate(String identifier, ComponentEventDelegator delegator) {
 		super(identifier, delegator);

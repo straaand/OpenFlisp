@@ -33,7 +33,7 @@ public class Input extends Signal {
 	private Output connection;
 	
 	/**
-	 * {@inheritDoc}
+	 * Creates an Input Signal.
 	 */
 	public Input(String identifier, Component owner) {
 		super(identifier, owner);
