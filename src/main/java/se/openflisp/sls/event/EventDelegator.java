@@ -46,6 +46,9 @@ public abstract class EventDelegator<T> {
 	 * @return true if the listener was added, false otherwise
 	 */
 	public boolean addListener(T listener) {
+		if (listener == null) {
+			return false;
+		}
 		return this.addListener(ListenerContext.DEFAULT, listener);
 	}
 	
@@ -56,6 +59,11 @@ public abstract class EventDelegator<T> {
 	 * @return true if the listener was added, false otherwise
 	 */
 	public boolean addListener(ListenerContext context, T listener) {
+		if (listener == null) {
+			return false;
+		} else if (context == null) {
+			return false;
+		}
 		if (!this.listeners.containsKey(context)) {
 			this.listeners.put(context, new LinkedList<T>());
 		}
