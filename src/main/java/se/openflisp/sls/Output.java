@@ -37,7 +37,7 @@ public class Output extends Signal {
 	private Set<Input> connections = Collections.newSetFromMap(new ConcurrentHashMap<Input, Boolean>());
 	
 	/**
-	 * {@inheritDoc}
+         * Creates an Output Signal.
 	 */
 	public Output(String identifier, Component owner) {
 		super(identifier, owner);

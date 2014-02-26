@@ -103,7 +103,7 @@ public abstract class Signal {
 	 * Connect two signals with each other.
 	 * 
 	 * @param signal	a signal which the connection should be made with
-	 * @returns true if a new connection was made, false otherwise
+	 * @return true if a new connection was made, false otherwise
 	 * @throws IllegalArgumentException if the signal connection already existed
 	 * @throws IllegalArgumentException if the two signal types can not connect
 	 */
@@ -113,7 +113,7 @@ public abstract class Signal {
 	 * Disconnect two signals from each other.
 	 * 
 	 * @param signal	a signal which if found should be disconnected
-	 * @returns true if a new connection was made, false otherwise
+	 * @return true if a new connection was made, false otherwise
 	 * @throws IllegalArgumentException if the signal connection don't exists
 	 * @throws IllegalArgumentException if the two signal types can not disconnect
 	 */
