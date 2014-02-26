@@ -26,7 +26,7 @@ import se.openflisp.sls.component.*;
 import se.openflisp.sls.simulation.Circuit;
 
 /**
- * Abstract class for simulation test classes to extend.
+ * Abstract class for simulation test classes to extend. Creates a circuit, starts and stop the simulation.
  * 
  * @author Pär Svedberg <rockkuf@gmail.com>
  * @version 1.0
@@ -55,9 +55,19 @@ public abstract class SimulationTest {
 		circuit.getSimulation().interrupt();
 	}
 	
-	public void connectGates(Gate[] fromOutputs, Gate toInput) {
-		if (!circuit.contains(toInput)) { 
-			circuit.addComponent(toInput);
+	/**
+	 * Connects the outputs of the gates in fromOutputs to inputs of gate toInput.
+	 * Also verifies that connections were successful.
+	 * Adds the toInput gate to the given simCircuit.
+	 * 
+	 * @param simCircuit	The circuit that gate toInput is added to.
+	 * @param fromOutputs	An array of gates which outputs is to be connected
+	 * 						to the inputs of toInput.
+	 * @param toInput		A single gate which will have 1+ gates connected to its input(s).
+	 */
+	public void connectGates(Circuit simCircuit, Gate[] fromOutputs, Gate toInput) {
+		if (!simCircuit.contains(toInput)) { 
+			simCircuit.addComponent(toInput);
 		}
 		if (fromOutputs.length > 0) {
 			int i = 0;
