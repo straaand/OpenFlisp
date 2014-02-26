@@ -42,7 +42,11 @@ public abstract class GateTest extends ComponentTest {
 		FLOATING_AND_LOW(new Signal.State[] {Signal.State.FLOATING, Signal.State.LOW}),
 		FLOATING_LOW_HIGH(new Signal.State[] {Signal.State.FLOATING, Signal.State.LOW, Signal.State.HIGH}),
 		LOW_HIGH_FLOATING(new Signal.State[] {Signal.State.LOW, Signal.State.HIGH, Signal.State.FLOATING}),
-		HIGH_FLOATING_LOW(new Signal.State[] {Signal.State.HIGH, Signal.State.FLOATING, Signal.State.LOW});
+		HIGH_FLOATING_LOW(new Signal.State[] {Signal.State.HIGH, Signal.State.FLOATING, Signal.State.LOW}),
+		
+		LOW_LOW_HIGH(new Signal.State[] {Signal.State.LOW, Signal.State.LOW, Signal.State.HIGH}),
+		LOW_HIGH_HIGH(new Signal.State[] {Signal.State.LOW, Signal.State.HIGH, Signal.State.HIGH}),
+		LOW_HIGH_LOW(new Signal.State[] {Signal.State.LOW, Signal.State.HIGH, Signal.State.LOW});
 		
 		public final Signal.State[] signals;
 		
