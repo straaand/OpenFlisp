@@ -16,6 +16,12 @@
  */
 package se.openflisp.gui;
 
+import java.awt.Image;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
 import se.openflisp.gui.swing.OpenFlispFrame;
@@ -49,7 +55,21 @@ public class OpenFlispApplication {
 	public void initialize() {
 		
 		// Add frame icon
-		// TODO	Add frame icon
+		try {
+			//TODO fix the icon
+			URL url;
+			url = OpenFlispApplication.class.getClassLoader().getResource("Open_Flisp_icon.png");
+			
+			//Somewhere there there is an error
+			Image icon = ImageIO.read(url);
+			frame.setIconImage(icon);
+			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 				
 		// Load settings
 		// TODO Load settings
