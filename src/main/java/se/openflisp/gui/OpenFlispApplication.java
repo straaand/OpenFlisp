@@ -58,7 +58,7 @@ public class OpenFlispApplication {
 		try {
 			//TODO fix the icon
 			URL url;
-			url = OpenFlispApplication.class.getClassLoader().getResource("Open_Flisp_icon_16x16.png");
+			url = OpenFlispApplication.class.getClassLoader().getResource("Open_Flisp_icon.png");
 			
 			//Somewhere there there is an error
 			Image icon = ImageIO.read(url);
