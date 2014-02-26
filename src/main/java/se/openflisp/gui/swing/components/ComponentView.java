@@ -29,7 +29,7 @@ import se.openflisp.sls.Component;
 @SuppressWarnings("serial")
 public abstract class ComponentView extends JPanel {
 	public Component component;
-	protected static int componentSize = 200;
+	protected static int componentSize = 50;
 	
 	// We need this in order to make DragAndDrop
 	public DragSource ds = DragSource.getDefaultDragSource();
@@ -37,6 +37,4 @@ public abstract class ComponentView extends JPanel {
 	public ComponentView(Component component) {
 		this.component = component;
 	}
-	
-	
 }
