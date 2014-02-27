@@ -39,33 +39,22 @@ public abstract class SingleGateSimTest extends SimulationTest{
 	}
 	
 	/**
-	 * Help method for simulation of a single Gates' output. Every Gate passed to
-	 * the method is added to a Circuit, connected and then simulated. 
-	 * Checks after simulation in a Circuit if the Output Signal.State of the given 
+	 * Help method for simulation of a single gates' output. Every gate passed to
+	 * the method is added to a circuit, connected and then simulated. 
+	 * Checks after simulation in a circuit if the output Signal.State of the given 
 	 * gateToSimulate is equal to the given value of expectedOutput.
 	 * 
-	 * @param inputGates		Each Output from a Gate[] is connected to 
+	 * @param fromOutputs		Each Output from a Gate[] is connected to 
 	 * 							an Input of the gateToSimulate.  
 	 * @param expectedOutput	A Signal.State value to compare for equality with 
 	 * 							the value of gateToSimulates Output.
 	 * @param gateToSimulate	The Gate which Output is to be tested
 	 */
-	public void helpSimulate(Gate[] inputGates, Signal.State expectedOutput, Gate gateToSimulate) {
-		circuit.addComponent(gateToSimulate);
+	public void helpSimulate(Gate[] fromOutputs, Signal.State expectedOutput, Gate gateToSimulate) {
 		ComponentSimListener testListener = new ComponentSimListener();
 		gateToSimulate.getEventDelegator().addListener(testListener);
-	
-		if (inputGates.length > 0) {
-			int i = 0;
-			for (Gate inputGate : inputGates) {
-				String inputID = Integer.toString(i);
-				circuit.addComponent(inputGate);
-				gateToSimulate.getInput(inputID).connect(inputGate.getOutput());
-				assertTrue(gateToSimulate.getInput(inputID).isConnected());
-				assertTrue(inputGate.getOutput().isConnected());
-				i++;
-			}
-		}
+		
+		connectGates(circuit, fromOutputs, gateToSimulate);
 		waitForSignalChange(gateToSimulate);
 		System.out.println("\tonSignalChange calls: " + String.valueOf(testListener.changedTimes()));
 		assertEquals(expectedOutput, gateToSimulate.getOutput().getState());
