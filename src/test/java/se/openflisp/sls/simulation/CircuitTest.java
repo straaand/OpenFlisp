@@ -135,4 +135,56 @@ public class CircuitTest {
 		component1.getOutput("1").connect(component2.getInput("2"));
 		verify(delegator).onComponentAdded(component2);
 	}
+	
+	@Test
+	public void testRemoveAComponentAfterDirectAdd() {
+		circuit.addComponent(component1);
+		circuit.removeComponent(component1);
+		assertThat(circuit.getComponents(), not(hasItems(component1)));
+	}
+	
+	@Test
+	public void testRemoveAComponentAfterIndirectAdd() {
+		component1.getOutput("1").connect(component2.getInput("2"));
+		circuit.addComponent(component1);
+		circuit.removeComponent(component2);
+		assertThat(circuit.getComponents(), hasItems(component1));
+		assertThat(circuit.getComponents(), not(hasItems(component2)));
+	}
+	
+	@Test
+	public void testRemoveDisconnectsOneConnection() {
+		component1.getOutput("1").connect(component2.getInput("2"));
+		circuit.addComponent(component1);
+		circuit.removeComponent(component2);
+		assertFalse(component1.getOutput("1").isConnected());
+		assertFalse(component2.getInput("2").isConnected());
+	}
+	
+	@Test
+	public void testRemoveDisconnectsManyConnections() {
+		circuit.addComponent(component1);
+		component1.getOutput("1").connect(component2.getInput("2"));
+		component3.getOutput("1").connect(component1.getInput("2"));
+		circuit.removeComponent(component1);
+		assertFalse(component1.getOutput("1").isConnected());
+		assertFalse(component1.getInput("2").isConnected());
+		assertFalse(component3.getOutput("1").isConnected());
+		assertFalse(component2.getInput("2").isConnected());
+	}
+	
+	@Test
+	public void testDelegationRemovedDirectComponent() {
+		circuit.addComponent(component1);
+		circuit.removeComponent(component1);
+		verify(delegator).onComponentRemoved(component1);
+	}
+	
+	@Test
+	public void testDelegationRemovedIndirectComponent() {
+		component1.getOutput("1").connect(component2.getInput("2"));
+		circuit.addComponent(component1);
+		circuit.removeComponent(component2);
+		verify(delegator).onComponentRemoved(component2);
+	}
 }
