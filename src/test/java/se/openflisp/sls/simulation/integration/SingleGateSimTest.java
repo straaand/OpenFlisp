@@ -29,7 +29,7 @@ import se.openflisp.sls.component.*;
  * @author Pär Svedberg <rockkuf@gmail.com>
  * @version 1.0
  */
-public abstract class SingleGateSimTest extends SimulationTest{
+public abstract class SingleGateSimTest extends SimulationTest {
 	public String gateID;
 	
 	@Before
@@ -56,7 +56,8 @@ public abstract class SingleGateSimTest extends SimulationTest{
 		
 		connectGates(circuit, fromOutputs, gateToSimulate);
 		waitForSignalChange(gateToSimulate);
-		System.out.println("\tonSignalChange calls: " + String.valueOf(testListener.changedTimes()));
+		if (DEBUG_MESSAGES)
+			System.out.println("\tonSignalChange calls: " + String.valueOf(testListener.changedTimes()));
 		assertEquals(expectedOutput, gateToSimulate.getOutput().getState());
 	}
 }

@@ -36,6 +36,8 @@ public abstract class SimulationTest {
 	public ConstantGate constantHigh, constantLow, constantFloating;
 	private String constantHighID, constantLowID, constantFloatingID;
 	
+	public static final boolean DEBUG_MESSAGES = false;
+	
 	@Before
 	public void setup() {
 		constantHighID = "ConstantHigh";
@@ -89,10 +91,12 @@ public abstract class SimulationTest {
 			if (!gateToTest.getOutput().getState().equals(Signal.State.FLOATING)
 				&& (System.currentTimeMillis() + 900) > timeout ) {
 				waitedEnough = true;
-				System.out.println("Exit by output signal change.");
+				if (DEBUG_MESSAGES)
+					System.out.println("Exit by output signal change.");
 			} else if (System.currentTimeMillis() > timeout) {
 				waitedEnough = true;
-				System.out.println("Exit by timeout.");
+				if (DEBUG_MESSAGES)
+					System.out.println("Exit by timeout.");
 			}
 		}
 	}
