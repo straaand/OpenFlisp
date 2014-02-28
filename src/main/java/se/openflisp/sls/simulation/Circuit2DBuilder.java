@@ -102,6 +102,16 @@ public class Circuit2DBuilder {
 	}
 	
 	/**
+	 * Checks if a Component exists in the builder.
+	 * 
+	 * @param componentIdentifier	identifier for a component
+	 * @return true if the component is in the lookup table, false otherwise
+	 */
+	public boolean hasComponent(String componentIdentifier) {
+		return this.components.containsKey(componentIdentifier);
+	}
+	
+	/**
 	 * Gets a component from the lookup table.
 	 * 
 	 * @param pin		identifier for a pin on a component

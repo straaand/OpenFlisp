@@ -117,6 +117,30 @@ public class Circuit {
 	}
 	
 	/**
+	 * Removes a component from a Circuit and disconnects all current active connections.
+	 * 
+	 * @param component		component to be removed
+	 */
+	public void removeComponent(Component component) {
+		if (component == null) {
+			throw new IllegalArgumentException("Component can not be null");
+		}
+		if (this.components.remove(component)) {
+			component.getEventDelegator().removeListener(ListenerContext.MODEL, this.connectionHandler);
+			component.getEventDelegator().removeListener(ListenerContext.MODEL, this.simulationThread.signalHandler);
+			for (Input input : component.getInputs()) {
+				input.disconnect(input.getConnection());
+			}
+			for (Output output : component.getOutputs()) {
+				for (Input input : output.getConnections()) {
+					output.disconnect(input);
+				}
+			}
+			this.getEventDelegator().onComponentRemoved(component);
+		}
+	}
+	
+	/**
 	 * Checks if the Component is in the Circuit.
 	 * 
 	 * @param component		component to check

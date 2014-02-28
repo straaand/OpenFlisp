@@ -148,4 +148,16 @@ public class Circuit2DBuilderTest {
 		builder.addConnection("UNKNOWN", "1", id2);
 		builder.build();
 	}
+	
+	@Test
+	public void testHasComponentsTrue() {
+		builder.addComponent(component1, position1);
+		assertTrue(builder.hasComponent(component1.getIdentifier()));
+	}
+	
+	@Test
+	public void testHasComponentsFalse() {
+		builder.addComponent(component1, position1);
+		assertFalse(builder.hasComponent(component2.getIdentifier()));
+	}
 }
