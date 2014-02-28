@@ -21,9 +21,12 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
 import se.openflisp.sls.Component;
 import se.openflisp.sls.Input;
 import se.openflisp.sls.Output;
@@ -32,7 +35,7 @@ import se.openflisp.sls.Signal;
 public abstract class EventDelegatorTest<T> {
 	
 	public EventDelegator<T> eventDelegator;
-	public T listener;
+	public T listener, listener2;
 	public Component component;
 	public Signal signal;
 	public Input input;
@@ -45,6 +48,7 @@ public abstract class EventDelegatorTest<T> {
 	@Before
 	public void setup() {
 		listener = Mockito.mock(getListenerClass());
+		listener2 = Mockito.mock(getListenerClass());
 		eventDelegator = getDelegatorInstance();
 	}
 
@@ -61,9 +65,7 @@ public abstract class EventDelegatorTest<T> {
 	@Test
 	public void testGettingSameListeners_DEFAULT() {
 		assertTrue(eventDelegator.addListener(ListenerContext.DEFAULT, listener));
-		assertSame(listener, eventDelegator.getListeners(ListenerContext.DEFAULT).get(0));
-		assertSame(eventDelegator.getListeners(ListenerContext.DEFAULT).get(0),
-			eventDelegator.getNormalListeners().get(0));
+		assertThat(eventDelegator.getListeners(ListenerContext.DEFAULT), hasItem(listener));
 	}
 
 	@Test
@@ -76,27 +78,20 @@ public abstract class EventDelegatorTest<T> {
 	@Test
 	public void testGettingSameListeners_MODEL() {
 		assertTrue(eventDelegator.addListener(ListenerContext.MODEL, listener));
-		assertSame(listener, eventDelegator.getModelListeners().get(0));
-		assertSame(eventDelegator.getListeners(ListenerContext.MODEL).get(0),
-			eventDelegator.getModelListeners().get(0));
+		assertThat(eventDelegator.getListeners(ListenerContext.MODEL), hasItem(listener));
 	}
 	
 	@Test
 	public void testGettingSameListeners_SWING() {
 		assertTrue(eventDelegator.addListener(ListenerContext.SWING, listener));
-		assertSame(listener, eventDelegator.getSwingListeners().get(0));
-		assertSame(eventDelegator.getListeners(ListenerContext.SWING).get(0),
-			eventDelegator.getSwingListeners().get(0));
+		assertThat(eventDelegator.getListeners(ListenerContext.SWING), hasItem(listener));
 	}
 
 	@Test
 	public void testGettingListenersMany() {
 		assertTrue(eventDelegator.addListener(listener));
 		assertThat(eventDelegator.getNormalListeners().size(), is(1));
-
-		assertThat(eventDelegator.getNormalListeners().size(), is(1));
-
-		assertTrue(eventDelegator.addListener(listener));
+		assertTrue(eventDelegator.addListener(listener2));
 		assertThat(eventDelegator.getNormalListeners().size(), is(2));
 	}
 
@@ -108,19 +103,16 @@ public abstract class EventDelegatorTest<T> {
 	@Test
 	public void testGettingModelListeners2() {
 		assertTrue(eventDelegator.addListener(ListenerContext.MODEL, listener));
-		List<T> listenerList = eventDelegator.getModelListeners();
+		Set<T> listenerList = eventDelegator.getModelListeners();
 		assertThat(listenerList.size(), is(1));
-		assertSame(listenerList.get(0), listener);
+		assertThat(listenerList, hasItem(listener));
 	}
 
 	@Test
 	public void testGettingModelListenersMany() {
 		assertTrue(eventDelegator.addListener(ListenerContext.MODEL, listener));
 		assertThat(eventDelegator.getModelListeners().size(), is(1));
-
-		assertThat(eventDelegator.getModelListeners().size(), is(1));
-
-		assertTrue(eventDelegator.addListener(ListenerContext.MODEL, listener));
+		assertTrue(eventDelegator.addListener(ListenerContext.MODEL, listener2));
 		assertThat(eventDelegator.getModelListeners().size(), is(2));
 	}
 
@@ -128,10 +120,7 @@ public abstract class EventDelegatorTest<T> {
 	public void testGettingNormalListenersMany() {
 		assertTrue(eventDelegator.addListener(listener));
 		assertThat(eventDelegator.getNormalListeners().size(), is(1));
-
-		assertThat(eventDelegator.getNormalListeners().size(), is(1));
-
-		assertTrue(eventDelegator.addListener(listener));
+		assertTrue(eventDelegator.addListener(listener2));
 		assertThat(eventDelegator.getNormalListeners().size(), is(2));
 	}
 
@@ -139,10 +128,7 @@ public abstract class EventDelegatorTest<T> {
 	public void testGettingSwingListenersMany() {
 		assertTrue(eventDelegator.addListener(ListenerContext.SWING, listener));
 		assertThat(eventDelegator.getSwingListeners().size(), is(1));
-
-		assertThat(eventDelegator.getSwingListeners().size(), is(1));
-
-		assertTrue(eventDelegator.addListener(ListenerContext.SWING, listener));
+		assertTrue(eventDelegator.addListener(ListenerContext.SWING, listener2));
 		assertThat(eventDelegator.getSwingListeners().size(), is(2));
 	}
 
@@ -156,7 +142,7 @@ public abstract class EventDelegatorTest<T> {
 		assertThat(eventDelegator.getModelListeners().size(), is(1));
 		assertThat(eventDelegator.getModelListeners().size(), is(1));
 
-		assertTrue(eventDelegator.addListener(ListenerContext.DEFAULT, listener));
+		assertTrue(eventDelegator.addListener(ListenerContext.DEFAULT, listener2));
 		assertThat(eventDelegator.getModelListeners().size(), is(1));
 		assertThat(eventDelegator.getNormalListeners().size(), is(2));
 		assertThat(eventDelegator.getModelListeners().size(), is(1));

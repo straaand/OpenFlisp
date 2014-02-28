@@ -17,10 +17,9 @@
 package se.openflisp.sls.event;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Base class for a event delegator.
@@ -35,7 +34,7 @@ public abstract class EventDelegator<T> {
 	/**
 	 * Map over all listeners arranged after their ListenerContext.
 	 */
-	private Map<ListenerContext, List<T>> listeners = new HashMap<ListenerContext, List<T>>();
+	private Map<ListenerContext, Set<T>> listeners = new ConcurrentHashMap<ListenerContext, Set<T>>();
 	
 	/**
 	 * Adds a listener that should be notified when a event happens.
@@ -65,7 +64,7 @@ public abstract class EventDelegator<T> {
 			return false;
 		}
 		if (!this.listeners.containsKey(context)) {
-			this.listeners.put(context, new LinkedList<T>());
+			this.listeners.put(context, Collections.newSetFromMap(new ConcurrentHashMap<T, Boolean>()));
 		}
 		return this.listeners.get(context).add(listener);
 	}
@@ -76,11 +75,11 @@ public abstract class EventDelegator<T> {
 	 * @param context	which context the listeners should have
 	 * @return unmodifiable list of listeners with the specified context
 	 */
-	public List<T> getListeners(ListenerContext context) {
+	public Set<T> getListeners(ListenerContext context) {
 		if (!this.listeners.containsKey(context)) {
-			this.listeners.put(context, new LinkedList<T>());
+			this.listeners.put(context, Collections.newSetFromMap(new ConcurrentHashMap<T, Boolean>()));
 		}
-		return Collections.unmodifiableList(this.listeners.get(context));
+		return Collections.unmodifiableSet(this.listeners.get(context));
 	}
 	
 	/**
@@ -88,7 +87,7 @@ public abstract class EventDelegator<T> {
 	 * 
 	 * @return list of all {@link ListenerContext#MODEL} context listeners
 	 */
-	public List<T> getModelListeners() {
+	public Set<T> getModelListeners() {
 		return this.getListeners(ListenerContext.MODEL);
 	}
 	
@@ -97,7 +96,7 @@ public abstract class EventDelegator<T> {
 	 * 
 	 * @return list of all {@link ListenerContext#SWING} context listeners
 	 */
-	public List<T> getSwingListeners() {
+	public Set<T> getSwingListeners() {
 		return this.getListeners(ListenerContext.SWING);
 	}
 	
@@ -107,7 +106,7 @@ public abstract class EventDelegator<T> {
 	 * @return list of listeners that don't have the {@link ListenerContext#MODEL}
 	 * 		    or {@link ListenerContext#SWING} context.
 	 */
-	public List<T> getNormalListeners() {
+	public Set<T> getNormalListeners() {
 		return this.getListeners(ListenerContext.DEFAULT);
 	}
 }
