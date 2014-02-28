@@ -18,6 +18,7 @@ package se.openflisp.sls.event;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -67,6 +68,37 @@ public abstract class EventDelegator<T> {
 			this.listeners.put(context, Collections.newSetFromMap(new ConcurrentHashMap<T, Boolean>()));
 		}
 		return this.listeners.get(context).add(listener);
+	}
+	
+	/**
+	 * Removes a listener from all contexts where it have been added.
+	 * 
+	 * @param listener		listener to be removed
+	 * @return true if the listener was removed at any context, otherwise false
+	 */
+	public boolean removeListener(T listener) {
+		boolean changed = false;
+		for (Entry<ListenerContext, Set<T>> entry : this.listeners.entrySet()) {
+			if (entry.getValue().remove(listener)) {
+				changed = true;
+			}
+		}
+		return changed;
+	}
+	
+	/**
+	 * Removes a listener from one specific context.
+	 * 
+	 * @param context		which context to remove the listener from
+	 * @param listener		listener to be removed
+	 * @return true if the listener was removed, otherwise false
+	 */
+	public boolean removeListener(ListenerContext context, T listener) {
+		Set<T> listeners = this.listeners.get(context);
+		if (listeners != null) {
+			return listeners.remove(listener);
+		}
+		return false;
 	}
 	
 	/**

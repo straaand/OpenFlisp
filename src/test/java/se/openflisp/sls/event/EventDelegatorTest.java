@@ -173,6 +173,62 @@ public abstract class EventDelegatorTest<T> {
 		assertThat(delegator.getSwingListeners().size(), is(NR_OF_SWING_LISTENERS));
 		assertThat(delegator.getNormalListeners().size(), is(NR_OF_DEFAULT_LISTENERS));
 	}
+	
+	@Test
+	public void testRemoveOneListener() {
+		eventDelegator.addListener(listener);
+		eventDelegator.removeListener(listener);
+		assertThat(eventDelegator.getNormalListeners(), not(hasItem(listener)));
+	}
+	
+	@Test
+	public void testRemoveFromSpecificContext() {
+		eventDelegator.addListener(ListenerContext.SWING, listener);
+		eventDelegator.removeListener(ListenerContext.SWING, listener);
+		assertThat(eventDelegator.getSwingListeners(), not(hasItem(listener)));
+	}
+	
+	@Test
+	public void testRemoveOneListenerFromMultipleContexts() {
+		eventDelegator.addListener(listener);
+		eventDelegator.addListener(ListenerContext.MODEL, listener);
+		eventDelegator.removeListener(listener);
+		assertThat(eventDelegator.getNormalListeners(), not(hasItem(listener)));
+		assertThat(eventDelegator.getModelListeners(), not(hasItem(listener)));
+	}
+	
+	@Test
+	public void testRemoveListenerFromContextThatIsEmpty() {
+		eventDelegator.addListener(listener);
+		eventDelegator.removeListener(ListenerContext.SWING, listener);
+		assertThat(eventDelegator.getNormalListeners(), hasItem(listener));
+	}
+	
+	@Test
+	public void testRemoveSpecificListenerReturnsTrue() {
+		eventDelegator.addListener(ListenerContext.DEFAULT, listener);
+		assertTrue(eventDelegator.removeListener(ListenerContext.DEFAULT, listener));
+	}
+	
+	@Test
+	public void testRemoveSpecificListenerReturnsFalse() {
+		eventDelegator.addListener(ListenerContext.DEFAULT, listener2);
+		assertFalse(eventDelegator.removeListener(ListenerContext.DEFAULT, listener));
+	}
+	
+	@Test
+	public void testRemoveFromMultipleContextReturnsTrue() {
+		eventDelegator.addListener(ListenerContext.SWING, listener);
+		eventDelegator.addListener(ListenerContext.MODEL, listener);
+		assertTrue(eventDelegator.removeListener(listener));
+	}
+	
+	@Test
+	public void testRemoveFromMultipleContextReturnsFalse() {
+		eventDelegator.addListener(ListenerContext.SWING, listener2);
+		eventDelegator.addListener(ListenerContext.MODEL, listener2);
+		assertFalse(eventDelegator.removeListener(listener));
+	}
 
 	public abstract EventDelegator<T> getDelegatorInstance();
 	public abstract Class<T> getListenerClass();
