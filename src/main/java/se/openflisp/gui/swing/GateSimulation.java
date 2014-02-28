@@ -179,7 +179,7 @@ public class GateSimulation extends JPanel implements ActionListener	{
 		}
 		
 		/* Button 3
-		 * Only for gates with three inputs. (In this case the three input andgate
+		 * Only for gates with three inputs. (In this case the three input andgate)
 		 */
 		if (b == buttonList.get(2))	{
 			if (b.getText().equals("0")) {
