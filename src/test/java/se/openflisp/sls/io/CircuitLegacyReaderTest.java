@@ -258,7 +258,6 @@ public class CircuitLegacyReaderTest {
 		@Override
 		public void describeTo(Description description) {
 			description.appendText("not a " + this.component.getSimpleName() + " with " + this.identifier + "as identifier");
-			
 		}
 
 		@Override
